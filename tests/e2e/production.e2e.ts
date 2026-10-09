@@ -8,6 +8,7 @@ const BASE_URL = `http://localhost:${PORT}`
 
 test.describe('Build de production sans routes de développement', () => {
   test.skip(({ isMobile }) => isMobile, 'Vérification serveur, une seule fois.')
+  test.describe.configure({ mode: 'serial' })
 
   let server: ChildProcess
 
