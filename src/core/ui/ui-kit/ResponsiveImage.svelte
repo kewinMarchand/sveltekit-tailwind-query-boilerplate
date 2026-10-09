@@ -8,6 +8,7 @@
     alt: string
     priority?: boolean
     eager?: boolean
+    fetchPriority?: 'high' | 'low' | 'auto'
     class?: string
   }
 
@@ -20,6 +21,7 @@
     alt,
     priority = false,
     eager = false,
+    fetchPriority = priority ? 'high' : 'auto',
     class: className,
   }: Props = $props()
 
@@ -51,7 +53,7 @@
     {width}
     {height}
     loading={priority || eager ? 'eager' : 'lazy'}
-    fetchpriority={priority ? 'high' : 'auto'}
+    fetchpriority={fetchPriority}
     decoding={priority ? 'sync' : 'async'}
     class={className}
   />

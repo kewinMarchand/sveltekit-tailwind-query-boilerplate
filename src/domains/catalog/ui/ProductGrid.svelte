@@ -44,7 +44,14 @@
 {:else}
   <ul class="catalog-grid" data-view={view}>
     {#each products as product, index (product.id)}
-      <li><ProductCard {product} eager={index < EAGER_COUNT} priority={index === 0} /></li>
+      <li>
+        <ProductCard
+          {product}
+          eager={index < EAGER_COUNT}
+          priority={index === 0}
+          fetchPriority={index === 0 ? 'high' : index < EAGER_COUNT ? 'low' : 'auto'}
+        />
+      </li>
     {/each}
   </ul>
 {/if}

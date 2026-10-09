@@ -119,11 +119,11 @@
 
   <div class="min-w-0">
     {#snippet filterButton()}
-      {#if listing && !isDesktop.current}
+      {#if listing}
         <SidePanel
           bind:open={filtersOpen}
           title="Filtres"
-          triggerClass="btn btn-outline"
+          triggerClass="btn btn-outline hidden js:max-lg:inline-flex"
           triggerTestId="catalog-filters-open"
         >
           {#snippet trigger()}

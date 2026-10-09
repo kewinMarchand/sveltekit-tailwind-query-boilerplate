@@ -40,7 +40,7 @@
         >
           <ResponsiveImage
             basePath={slide.imageBasePath}
-            widths={[640, 1280]}
+            widths={[640, 960, 1280]}
             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             width={1280}
             height={720}

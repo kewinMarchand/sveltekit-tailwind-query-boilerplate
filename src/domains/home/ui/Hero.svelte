@@ -8,7 +8,7 @@
 <div class="hero full-bleed" data-testid="home-hero">
   <ResponsiveImage
     basePath="/images/hero"
-    widths={[640, 1280, 1920]}
+    widths={[640, 960, 1280, 1920]}
     sizes="100vw"
     width={1920}
     height={1080}

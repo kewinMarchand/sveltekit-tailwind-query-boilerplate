@@ -10,9 +10,15 @@
     product: Catalog.Product
     eager?: boolean
     priority?: boolean
+    fetchPriority?: 'high' | 'low' | 'auto'
   }
 
-  const { product, eager = false, priority = false }: Props = $props()
+  const {
+    product,
+    eager = false,
+    priority = false,
+    fetchPriority = priority ? 'high' : 'auto',
+  }: Props = $props()
 </script>
 
 <article id={product.slug} class="product-card" data-testid="catalog-product">
@@ -20,12 +26,13 @@
     <ResponsiveImage
       basePath={`/images/product-${product.image}`}
       widths={[400, 800]}
-      sizes="(min-width: 1024px) 25vw, (min-width: 480px) 50vw, 100vw"
+      sizes="(min-width: 1024px) 300px, (min-width: 536px) calc(50vw - 36px), calc(100vw - 32px)"
       width={800}
       height={800}
       alt={product.name}
       {eager}
       {priority}
+      {fetchPriority}
       class="product-card-image"
     />
     <div class="flex flex-col gap-1 p-4">
