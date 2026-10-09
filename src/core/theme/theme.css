@@ -1,11 +1,20 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter';
 
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('Liberation Sans'), local('LiberationSans-Regular');
+  size-adjust: 106.86%;
+  ascent-override: 90.66%;
+  descent-override: 22.57%;
+  line-gap-override: 0%;
+}
+
 @custom-variant js (&:where(.js, .js *));
 @custom-variant no-js (&:where(:root:not(.js), :root:not(.js) *));
 
 @theme static {
-  --font-sans: 'Inter Variable', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter Fallback', system-ui, sans-serif;
 
   --color-primary: #1d4ed8;
   --color-primary-dark: #1e3a8a;
