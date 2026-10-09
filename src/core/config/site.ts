@@ -1,0 +1,42 @@
+import { PUBLIC_SITE_URL } from '$app/env/public'
+
+import type { AccessibilityAudit } from './accessibility'
+
+export interface LegalEntity {
+  name: string
+  address: string
+}
+
+export interface SiteConfig {
+  name: string
+  description: string
+  url: string
+  locale: string
+  publisher: LegalEntity & {
+    siret: string
+    publicationDirector: string
+    email: string
+  }
+  host: LegalEntity
+  accessibility: AccessibilityAudit
+}
+
+export const SITE: SiteConfig = {
+  name: 'SvelteKit Tailwind Query Boilerplate',
+  description:
+    'Boilerplate SvelteKit avec Tailwind CSS, TanStack Query, superforms et zod, outillé pour la QA et les tests end-to-end.',
+  url: PUBLIC_SITE_URL,
+  locale: 'fr_FR',
+  publisher: {
+    name: 'Exemple SAS (société fictive)',
+    address: '1 rue de l’Exemple, 13000 Marseille (adresse fictive)',
+    siret: '000 000 000 00000 (numéro fictif)',
+    publicationDirector: 'Prénom Nom (personne fictive)',
+    email: 'contact@exemple.fr',
+  },
+  host: {
+    name: 'Hébergeur Exemple (société fictive)',
+    address: '2 avenue de l’Exemple, 75000 Paris (adresse fictive)',
+  },
+  accessibility: { auditDate: null, complianceRate: null, auditor: null },
+}

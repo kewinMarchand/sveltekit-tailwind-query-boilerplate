@@ -1,0 +1,17 @@
+{
+  "extends": "$app/tsconfig",
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "allowJs": false,
+    "checkJs": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["$app/types", "vitest/globals", "@testing-library/jest-dom"]
+  },
+  "include": ["src", "tests", "*.ts"]
+}

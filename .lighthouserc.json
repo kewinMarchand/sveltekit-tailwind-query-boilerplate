@@ -1,0 +1,56 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "PORT=3220 PUBLIC_SITE_URL=http://localhost:3220 yarn start",
+      "startServerReadyPattern": "Listening on",
+      "url": [
+        "http://localhost:3220/",
+        "http://localhost:3220/taches",
+        "http://localhost:3220/contact",
+        "http://localhost:3220/catalogue",
+        "http://localhost:3220/catalogue/plantes-interieur",
+        "http://localhost:3220/catalogue/plantes-interieur/feuillages",
+        "http://localhost:3220/mentions-legales",
+        "http://localhost:3220/donnees-personnelles",
+        "http://localhost:3220/accessibilite",
+        "http://localhost:3220/plan-du-site"
+      ],
+      "numberOfRuns": 1,
+      "settings": {
+        "chromeFlags": "--headless=new --no-sandbox"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": [
+          "error",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "categories:accessibility": [
+          "error",
+          {
+            "minScore": 1
+          }
+        ],
+        "categories:seo": [
+          "error",
+          {
+            "minScore": 1
+          }
+        ],
+        "categories:best-practices": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/reports"
+    }
+  }
+}

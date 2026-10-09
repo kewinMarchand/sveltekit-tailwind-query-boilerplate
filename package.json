@@ -1,0 +1,83 @@
+{
+  "name": "sveltekit-tailwind-query-boilerplate",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev --port 5173",
+    "build": "vite build",
+    "start": "node --env-file-if-exists=.env build",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync && husky",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:e2e": "playwright test tests/e2e",
+    "test:a11y": "playwright test tests/a11y",
+    "lhci": "lhci autorun",
+    "api:types": "openapi-typescript $API_SCHEMA_URL --output src/core/api/schema.d.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@eslint/js": "^10.0.1",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@internationalized/date": "^3.12.4",
+    "@lhci/cli": "^0.15.1",
+    "@lucide/svelte": "^1.53.0",
+    "@playwright/test": "^1.64.0",
+    "@sveltejs/adapter-node": "^6.0.0",
+    "@sveltejs/kit": "^3.0.1",
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/svelte-query": "^6.3.1",
+    "@tanstack/svelte-query-devtools": "^6.3.1",
+    "@testing-library/dom": "^10",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/svelte": "^5.4.2",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/node": "^24",
+    "bits-ui": "^2.19.5",
+    "embla-carousel": "^8.6.0",
+    "embla-carousel-svelte": "^8.6.0",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
+    "eslint-plugin-svelte": "^3.23.0",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "jsdom": "^29",
+    "lint-staged": "^17.6.0",
+    "openapi-typescript": "^7.13.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-svelte": "^4.1.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "svelte": "^5.57.2",
+    "svelte-check": "^4.7.6",
+    "sveltekit-superforms": "^3.0.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.1",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3",
+    "zod": "^4.6.5"
+  },
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=24.14.0"
+  },
+  "lint-staged": {
+    "*.{ts,svelte,js,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "license": "MIT",
+  "description": "Boilerplate SvelteKit, Tailwind CSS, TanStack Query, superforms et zod, avec lint, tests unitaires, e2e, accessibilité et Lighthouse"
+}

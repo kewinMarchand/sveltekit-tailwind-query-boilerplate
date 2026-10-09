@@ -1,0 +1,31 @@
+# dependencies
+/node_modules
+
+# sveltekit
+/.svelte-kit/
+/build/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# env files
+.env*
+!.env.example
+
+# vite
+vite.config.*.timestamp-*
+
+# qa
+/coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/.lighthouseci/
+/screenshots/
