@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from './Icon.svelte'
 
-  import type { IconName } from './Icon.svelte'
+  import type { IconName } from './iconNames'
   import type { Snippet } from 'svelte'
 
   type Severity = 'error' | 'warning' | 'success' | 'info'

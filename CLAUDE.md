@@ -19,7 +19,7 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 - **Value object `CatalogQuery`** (`domain/catalogQuery.ts`) : `parseCatalogQuery`, `serializeCatalogQuery`, `withFilter` (remet la page à 1 et conserve le reste), `clearFilters`, `isFiltered` (décide du `noindex`). Les libellés d'affichage sont dans `ui/labels.ts`, pas dans le domaine.
 - **Catalogue** : état dans l'URL, seule source de vérité (`CatalogQuery`). Filtre, comptage disjonctif, tri et pagination des résultats appartiennent à l'API : ils vivent dans l'adaptateur en mémoire qui la simule (`infrastructure/in-memory/productSearch.ts`, avec le jeu de données), testés unitairement. Au branchement de l'API, seul `infrastructure/` change. La fenêtre de pagination à ellipses est de la présentation (`ui/pagination.ts`).
 - **Value object `Price`** (`domain/price.ts`) : centimes, type marqué (seuls `Price.fromCents` et `eurosToCents` en produisent un, une seule conversion de type justifiée sur place), `formatPrice`. Les euros n'existent que dans l'URL et à l'affichage : plus de `* 100` caché dans le filtre.
-- **Icônes** : `@lucide/svelte`, uniquement via `src/lib/shared/ui/kit/Icon.svelte` (règle ESLint), import par icône (`@lucide/svelte/icons/<nom>`).
+- **Icônes** : sprite SVG tiré de Lucide (section 17 de la spec commune). La liste des noms Lucide est dans `icons.json`. `make icons` (`tools/icons.ts`) génère `static/icons.svg` et le type `IconName` (`src/lib/shared/ui/kit/iconNames.ts`), les trois sont versionnés. `make qa` échoue si le sprite ou le type sont périmés (`make icons-check`). Un seul composant `Icon.svelte` : `<use href="/icons.svg#nom">`, décoratif par défaut, `role="img"` et `aria-label` avec `label`.
 - **Carrousel** : Embla Carousel 8 et son adaptateur Svelte, uniquement dans `src/lib/shared/ui/carousel/` (règle ESLint). Sans JS, la piste reste en `overflow-x: auto` + `scroll-snap`.
 - **Police** : Inter variable via `@fontsource-variable/inter`, servie localement. Unité de police : `px`.
 - **Environnement** : variables déclarées et validées par zod dans `src/env.ts` (`defineEnvVars`), lues via `$app/env/public` et `$app/env/private`.
@@ -47,6 +47,8 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 - `@boundaries/eslint-plugin` 7.2 (dev, environ 3 Mo installés avec `@boundaries/elements`, aucun effet sur le bundle) : vérifie les règles de dépendance entre couches et modules (D6). Contrairement à `no-restricted-imports`, qui compare la chaîne d'import, il résout le chemin réel : un import relatif `../infrastructure/x` ne le contourne pas. Compatible ESLint 10 (peer `>=6`) et fichiers `.svelte`, vérifié par l'auto-test. C'est le nouveau nom de `eslint-plugin-boundaries`, que l'ancien paquet annonce comme remplaçant.
 - `eslint-import-resolver-typescript` 4.4 (dev, environ 4,7 Mo avec `unrs-resolver`) : résolveur demandé par le plugin pour suivre `#lib/*` via le `tsconfig.json`.
 - `@sentry/sveltekit` 11.6 (dev, embarqué par adapter-node) : SDK GlitchTip imposé par la spec (section 16). Côté navigateur, 27 Ko gzip (82 Ko brut) dans un chunk chargé à la demande, après l'affichage et seulement avec un DSN : rien dans le JS initial. Les drapeaux de build `__SENTRY_TRACING__` et `__SENTRY_DEBUG__` à `false` (`vite.config.ts`) et l'import dynamique déstructuré ramènent ce chunk de 143 à 27 Ko gzip. Côté serveur, environ 79 Mo dans `node_modules`, mais seuls les modules utilisés sont embarqués dans `build/`.
+- `@iconify-json/lucide` 1.2 (dev, 640 Ko installés, aucun effet sur le bundle) : les tracés Lucide (licence ISC) au format Iconify, lus par `tools/icons.ts`. Remplace `@lucide/svelte`, retiré.
+- `svgstore` 3.0 (dev, environ 2,3 Mo installés avec `cheerio` et ses dépendances, aucun effet sur le bundle) : assemble le sprite, un `<symbol>` par icône avec son `viewBox`.
 - `eslint-plugin-simple-import-sort` : impose l'ordre externes, `#lib/`, relatifs, types, que le modèle Next obtenait d'`eslint-plugin-import`. Léger, compatible ESLint 10 et fichiers `.svelte`.
 - `@internationalized/date` et `@testing-library/dom` : peers, voir le tableau.
 
@@ -56,7 +58,7 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 - `boundaries/dependencies` (refus par défaut) : routage vers vues, index des modules et socle. Vues vers index des modules et socle. Index d'un module vers ses propres couches. `domain/` vers son module et les types du socle (`import type` seulement). `application/` vers domaine et infrastructure du module, et types du socle. `infrastructure/` vers domaine du module et `shared/api`. `ui/` vers domaine, application, interface du module et socle, plus infrastructure si le module n'a pas d'`application/` (liste calculée en lisant le disque). Socle vers socle seulement. La valeur capturée `module` interdit tout import d'un module à l'autre.
 - `no-restricted-imports` :
   - frameworks interdits dans `domain/` et `application/` (`svelte`, `$app/*`, `@sveltejs/*`, `@tanstack/*`, `bits-ui`, `sveltekit-superforms`) ;
-  - `@lucide/svelte` interdit hors du wrapper `Icon.svelte` ;
+  - `@iconify-json/*` et `svgstore` interdits hors de `tools/icons.ts` ;
   - `@sentry/*` interdit hors de `shared/observability/`
   - `embla-carousel*` interdit hors de `shared/ui/carousel/` ;
   - chemins relatifs à plus d'un niveau interdits.

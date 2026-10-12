@@ -15,6 +15,6 @@
   onclick={mode.toggle}
   data-testid="a11y-mode-toggle"
 >
-  <Icon name="accessibility" />
+  <Icon name="person-standing" />
   <span class="max-lg:sr-only">Accessibilité renforcée</span>
 </Button>

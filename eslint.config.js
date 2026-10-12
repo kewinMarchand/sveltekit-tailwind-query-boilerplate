@@ -20,8 +20,9 @@ const RELATIVE_DEPTH = {
   message: 'Utiliser l’alias #lib/ au-delà d’un niveau.',
 }
 const ICONS_WRAPPER = {
-  group: ['@lucide/svelte', '@lucide/svelte/*'],
-  message: 'Les icônes passent par le wrapper #lib/shared/ui/kit/Icon.',
+  group: ['@iconify-json/*', 'svgstore'],
+  message:
+    'Les icônes passent par le sprite : nom dans icons.json, make icons, puis #lib/shared/ui/kit/Icon.',
 }
 const CAROUSEL_WRAPPER = {
   group: ['embla-carousel', 'embla-carousel-*'],
@@ -249,7 +250,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['src/lib/shared/ui/kit/Icon.svelte'],
+    files: ['tools/icons.ts'],
     rules: { 'no-restricted-imports': ['error', { patterns: [RELATIVE_DEPTH, CAROUSEL_WRAPPER] }] },
   },
   {

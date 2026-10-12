@@ -26,7 +26,7 @@ S'y ajoutent : menu de catégories en cascade (desktop) et en niveaux (mobile), 
 | TanStack Svelte Query 6                 | Cache et synchronisation des données côté client                        |
 | sveltekit-superforms 3 + zod 4          | Formulaires validés côté serveur et client, même schéma                 |
 | Embla Carousel 8                        | Carrousel (glisser, swipe, molette), via `shared/ui/carousel`           |
-| @lucide/svelte                          | Icônes, via le wrapper `Icon`                                           |
+| Lucide (sprite SVG)                     | Icônes : `static/icons.svg` généré par `make icons`, composant `Icon`   |
 | @fontsource-variable/inter              | Police Inter servie localement                                          |
 | ESLint 10, Prettier, Husky, lint-staged | Qualité du code et règles d’architecture, vérifiées à chaque commit     |
 | Vitest 5 + Testing Library              | Tests unitaires et fonctionnels                                         |
@@ -142,19 +142,20 @@ Les règles de dépendance n'ont rien à changer : `eslint.config.js` lit la lis
 
 `make help` liste toutes les commandes. Les principales :
 
-| Commande                               | Effet                                                                                         |
-| -------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `make up`                              | Serveur de développement (port 5173)                                                          |
-| `make build` / `make start`            | Build de production, puis le servir                                                           |
-| `make qa`                              | QA rapide : lint (dont architecture), auto-test des règles, format, types, tests unitaires    |
-| `make arch-selftest`                   | Écrit une violation de chaque règle d'architecture, exige l'échec d'ESLint, puis la retire    |
-| `make qa-full`                         | QA complète : QA rapide, e2e, accessibilité, Lighthouse                                       |
-| `make test-unit`                       | Vitest                                                                                        |
-| `make test-e2e`                        | Playwright, desktop et mobile (port 3120)                                                     |
-| `make test-a11y`                       | axe-core, WCAG 2.1 AA, sur chaque page, mode standard et mode renforcé                        |
-| `make metrics`                         | Lighthouse CI (port 3220) : échoue sous 90 en performance ou sous 100 en accessibilité et SEO |
-| `make api-types`                       | Génère `src/lib/shared/api/schema.d.ts` depuis `API_SCHEMA_URL`                               |
-| `make docker-build` / `make docker-up` | Image de production, sur le port `PORT` (3000 par défaut)                                     |
+| Commande                               | Effet                                                                                                       |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `make up`                              | Serveur de développement (port 5173)                                                                        |
+| `make build` / `make start`            | Build de production, puis le servir                                                                         |
+| `make qa`                              | QA rapide : lint (dont architecture), auto-test des règles, sprite d'icônes, format, types, tests unitaires |
+| `make icons`                           | Génère `static/icons.svg` et le type des noms depuis `icons.json`                                           |
+| `make arch-selftest`                   | Écrit une violation de chaque règle d'architecture, exige l'échec d'ESLint, puis la retire                  |
+| `make qa-full`                         | QA complète : QA rapide, e2e, accessibilité, Lighthouse                                                     |
+| `make test-unit`                       | Vitest                                                                                                      |
+| `make test-e2e`                        | Playwright, desktop et mobile (port 3120)                                                                   |
+| `make test-a11y`                       | axe-core, WCAG 2.1 AA, sur chaque page, mode standard et mode renforcé                                      |
+| `make metrics`                         | Lighthouse CI (port 3220) : échoue sous 90 en performance ou sous 100 en accessibilité et SEO               |
+| `make api-types`                       | Génère `src/lib/shared/api/schema.d.ts` depuis `API_SCHEMA_URL`                                             |
+| `make docker-build` / `make docker-up` | Image de production, sur le port `PORT` (3000 par défaut)                                                   |
 
 ## Architecture
 
@@ -221,7 +222,7 @@ Le pattern est dans `src/lib/modules/task/` :
 
 ### Ajouter une icône
 
-Importer l'icône depuis `@lucide/svelte/icons/<nom>` dans `src/lib/shared/ui/kit/Icon.svelte` et l'ajouter à `ICONS`. Ne jamais importer `@lucide/svelte` ailleurs, ESLint le refuse.
+Ajouter son nom Lucide (lucide.dev/icons) dans `icons.json`, lancer `make icons`, puis versionner `icons.json`, `static/icons.svg` et `src/lib/shared/ui/kit/iconNames.ts`. L'utiliser avec `<Icon name="nom" />`. `make qa` échoue si le sprite n'a pas été régénéré.
 
 ## Tests
 
