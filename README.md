@@ -59,6 +59,82 @@ Variables d'environnement (`.env`, déclarées et validées dans `src/env.ts`). 
 | `DEV_ROUTES`      | `1` : expose `/charte-graphique` et `/_erreur-test` hors du serveur de développement                        |
 | `API_SCHEMA_URL`  | Schéma OpenAPI de l'API consommée, lu par `make api-types`                                                  |
 
+## Démarrer un projet à partir de ce dépôt
+
+### Créer le dépôt
+
+Voie recommandée : le dépôt est un modèle GitHub. Cliquer sur « Use this template », ou en ligne de commande :
+
+```sh
+gh repo create mon-projet --template kewinMarchand/sveltekit-tailwind-query-boilerplate --private --clone
+```
+
+Le nouveau dépôt part d'un historique neuf, sans lien avec celui-ci.
+
+Voie du fork, pour suivre les évolutions du boilerplate ou y contribuer :
+
+```sh
+gh repo fork kewinMarchand/sveltekit-tailwind-query-boilerplate --clone --fork-name mon-projet
+```
+
+Le fork devient le dépôt `origin` et ce dépôt le dépôt `upstream`. GitHub refuse de forker un dépôt dans le compte qui le possède : dans ce cas, forker dans une organisation avec `--org`.
+
+### Récupérer les mises à jour
+
+Avec un fork, l'historique est commun :
+
+```sh
+git fetch upstream
+git merge upstream/main
+```
+
+Avec un dépôt créé depuis le modèle, l'historique n'est pas commun : on reprend les commits utiles un par un.
+
+```sh
+git remote add boilerplate https://github.com/kewinMarchand/sveltekit-tailwind-query-boilerplate.git
+git fetch boilerplate
+git log --oneline boilerplate/main
+git cherry-pick <sha>
+```
+
+### Personnaliser
+
+| Sujet                      | Fichiers                                                                                                                                                                                                                                                          |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nom du paquet              | `package.json` (`name`, `description`)                                                                                                                                                                                                                            |
+| Identité et config du site | `src/lib/shared/config/site.ts` (nom, description, éditeur, hébergeur, audit d'accessibilité), `.env.example` (`PUBLIC_SITE_URL`), `static/manifest.webmanifest`, `src/app.html` (`theme-color`), `LICENSE`                                                       |
+| Navigation                 | `src/lib/shared/config/navigation.ts` (menu, pied de page, sitemap, plan du site)                                                                                                                                                                                 |
+| Couleurs, police, tokens   | `src/lib/shared/theme/theme.css`                                                                                                                                                                                                                                  |
+| Ports                      | développement : `package.json` (script `dev`) et `vite.config.ts` (5173). Tests : `playwright.config.ts` (3120), `tests/e2e/production.e2e.ts` (3121). Lighthouse : `.lighthouserc.json` (3220). Production : `Dockerfile`, `compose.yaml`, `.env.example` (3000) |
+| Logo et favicons           | `static/logo-mark.svg`, `static/favicon.svg`, `static/favicon.ico`, `static/apple-touch-icon.png`, `static/icon-192.png`, `static/icon-512.png`, `static/og-image.jpg`                                                                                            |
+| Pages légales              | `src/lib/views/legal/` (textes), alimentées par `site.ts`                                                                                                                                                                                                         |
+| URL Lighthouse             | `.lighthouserc.json` (`collect.url`)                                                                                                                                                                                                                              |
+| Intégration continue       | `.github/workflows/ci.yml`                                                                                                                                                                                                                                        |
+| Documentation              | `README.md`, `CLAUDE.md`                                                                                                                                                                                                                                          |
+
+Les tests e2e attendent les ports 3120 et 5173 en dur (`tests/e2e/seo.e2e.ts`, `tests/e2e/breadcrumb.e2e.ts`, `src/lib/shared/seo/breadcrumb.test.ts`, `vitest.setup.ts`) : les changer en même temps que les ports.
+
+### Retirer les modules d'exemple
+
+Le catalogue, le blog et les tâches sont des exemples. Le contact reste, c'est le seul module que la procédure garde. Elle a été déroulée sur une copie jusqu'à un `make qa` vert.
+
+1. Supprimer les modules et leurs routes : `src/lib/modules/catalog/`, `src/lib/modules/blog/`, `src/lib/modules/task/`, `src/routes/catalogue/`, `src/routes/taches/`, `src/routes/+page.server.ts` (articles de l'accueil) et `src/routes/+layout.server.ts` (menu des catégories).
+2. Retirer le catalogue du socle. Dans `src/lib/shared/config/navigation.ts` et son `index.ts`, supprimer `CATALOG_NAVIGATION`, le type `NavigationNode` et l'entrée `/taches`. Dans `src/lib/shared/ui/layout/`, retirer la propriété `categoryMenu` d'`AppShell.svelte` et de `Header.svelte`, retirer le menu de catégories du header, ramener `MobileMenu.svelte` à la liste de `MAIN_NAVIGATION`, puis supprimer `CategoryMenu.svelte` et les hooks `useCascadeMenu`, `useAnchoredPanel` et `useDrillDown`, devenus inutiles. Les classes `category-menu*` de `theme.css` peuvent partir aussi.
+3. Mettre à jour les vues et les routes qui les rendent :
+   - `src/lib/views/home/HomeView.svelte` : retirer la section des articles et la propriété `blog`, et `src/routes/+page.svelte` ne lui passe plus de données
+   - `src/lib/views/home/Hero.svelte` : retirer le bouton vers `/taches`
+   - `src/lib/views/styleguide/MediaSection.svelte` : retirer les cartes de blog et de produit
+   - `src/lib/views/errors/ErrorView.svelte` : retirer le lien vers le catalogue
+   - `src/lib/views/legal/SitemapView.svelte` : retirer l'arbre des catégories et supprimer `SitemapTree.svelte`, et `src/routes/plan-du-site/+page.svelte` rend la vue sans données
+   - `src/routes/+layout.svelte` : rendre `AppShell` sans propriété
+   - `src/routes/sitemap.xml/+server.ts` : appeler `buildSitemapXml()` sans les chemins du catalogue.
+4. Adapter les tests. Supprimer `tests/e2e/catalogue.e2e.ts`, `tests/e2e/taches.e2e.ts` et `tests/e2e/category-menu.e2e.ts`. Retirer les routes `/taches`, `/catalogue` et `/catalogue/plantes-interieur/feuillages` de `tests/e2e/routes.ts`, et les cas du catalogue, du blog et des tâches dans `accueil.e2e.ts`, `breadcrumb.e2e.ts`, `errors.e2e.ts`, `seo.e2e.ts`, `layout.e2e.ts` et `tests/a11y/pages.a11y.ts`.
+5. Retirer les URL `/taches` et `/catalogue...` de `.lighthouserc.json`.
+6. Repointer l'auto-test d'architecture. `tools/archSelftest.ts` écrit ses violations dans les modules d'exemple : les déplacer vers `src/lib/modules/contact/` (domaine vers infrastructure par `../infrastructure/sendContactMessage`, domaine vers framework, interface vers un index de module, types générés hors infrastructure) et vers `#lib/modules/contact` pour le socle, la vue et le routage. Les deux cas qui demandent un module avec `application/` (application vers framework, interface vers infrastructure) n'ont plus de cible : les retirer, puis les rétablir au premier module en forme complète.
+7. Lancer `make qa`, puis `make test-e2e`, `make test-a11y` et `make metrics`. Mettre à jour `README.md` et `CLAUDE.md`.
+
+Les règles de dépendance n'ont rien à changer : `eslint.config.js` lit la liste des modules sur le disque.
+
 ## Commandes
 
 `make help` liste toutes les commandes. Les principales :
