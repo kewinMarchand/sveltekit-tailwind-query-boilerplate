@@ -6,7 +6,7 @@ import { CATALOG_DEPENDENCY } from '#lib/modules/catalog/application/dependencie
 import {
   queryFromFormData,
   serializeCatalogQuery,
-  updateCatalogQuery,
+  withFilter,
 } from '#lib/modules/catalog/domain/catalogQuery'
 import { resolveHref } from '#lib/shared/routing'
 
@@ -38,7 +38,7 @@ export const useCatalogNavigation = (getPath: () => AppPath, getQuery: () => Cat
       )
     },
     update(patch: Partial<Omit<Catalog.Query, 'page'>>) {
-      void apply(updateCatalogQuery(getQuery(), patch))
+      void apply(withFilter(getQuery(), patch))
     },
     submitForm(event: Event) {
       event.preventDefault()

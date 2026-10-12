@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { EXPOSURE_LABELS, EXPOSURES, SIZE_LABELS, SIZES, SORTS, VIEWS } from './catalog'
+import { EXPOSURES, SIZES, SORTS, VIEWS } from './catalog'
 
 import type { Catalog } from './catalog'
 
@@ -67,12 +67,13 @@ export const serializeCatalogQuery = (query: Catalog.Query): string => {
   return search ? `?${search}` : ''
 }
 
-export const updateCatalogQuery = (
+/** Tout changement de filtre, de tri ou de vue remet la page à 1 et conserve le reste. */
+export const withFilter = (
   query: Catalog.Query,
   patch: Partial<Omit<Catalog.Query, 'page'>>,
 ): Catalog.Query => ({ ...query, ...patch, page: 1 })
 
-export const clearCatalogFilters = (query: Catalog.Query): Catalog.Query => ({
+export const clearFilters = (query: Catalog.Query): Catalog.Query => ({
   ...DEFAULT_QUERY,
   view: query.view,
 })
@@ -84,8 +85,9 @@ export const countActiveFilters = (query: Catalog.Query) =>
   Number(query.priceMax !== undefined) +
   Number(query.inStock)
 
-export const isIndexable = (query: Catalog.Query) =>
-  countActiveFilters(query) === 0 && query.sort === 'pertinence' && query.view === 'grille'
+/** Une liste filtrée, triée ou en vue liste est une variante : elle n'est pas indexée. */
+export const isFiltered = (query: Catalog.Query) =>
+  countActiveFilters(query) > 0 || query.sort !== 'pertinence' || query.view !== 'grille'
 
 export const queryEntries = (query: Catalog.Query, omit: string[] = []): [string, string][] =>
   [...new URLSearchParams(serializeCatalogQuery({ ...query, page: 1 }))].filter(
@@ -98,30 +100,4 @@ export const queryFromFormData = (data: FormData): Catalog.Query => {
     if (typeof value === 'string') params.append(name, value)
   }
   return { ...parseCatalogQuery(params), page: 1 }
-}
-
-export interface ActiveFilter {
-  label: string
-  query: Catalog.Query
-}
-
-export const listActiveFilters = (query: Catalog.Query): ActiveFilter[] => {
-  const without = (patch: Partial<Catalog.Query>) => updateCatalogQuery(query, patch)
-  return [
-    ...query.exposures.map((value) => ({
-      label: EXPOSURE_LABELS[value],
-      query: without({ exposures: query.exposures.filter((item) => item !== value) }),
-    })),
-    ...query.sizes.map((value) => ({
-      label: `Taille ${SIZE_LABELS[value].toLowerCase()}`,
-      query: without({ sizes: query.sizes.filter((item) => item !== value) }),
-    })),
-    ...(query.priceMin === undefined
-      ? []
-      : [{ label: `Prix min. ${query.priceMin} €`, query: without({ priceMin: undefined }) }]),
-    ...(query.priceMax === undefined
-      ? []
-      : [{ label: `Prix max. ${query.priceMax} €`, query: without({ priceMax: undefined }) }]),
-    ...(query.inStock ? [{ label: 'En stock', query: without({ inStock: false }) }] : []),
-  ]
 }

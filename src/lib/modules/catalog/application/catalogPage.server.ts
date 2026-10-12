@@ -1,37 +1,36 @@
-import { error } from '@sveltejs/kit'
-
 import { parseCatalogQuery } from '../domain/catalogQuery'
-import { listCategoryPaths, parseCategorySlugs, toCategoryMenu } from '../domain/categoryPath'
-import { findCatalogListing, findCategoryTree } from '../infrastructure/catalogRepository'
+import { parseCategorySlugs } from '../domain/categoryPath'
+import { findCatalogListing } from '../infrastructure/catalogRepository'
 import { CatalogLoadError } from './CatalogLoadError'
-import { CATALOG_DEPENDENCY } from './dependencies'
 
 import type { Catalog } from '../domain/catalog'
-import type { ServerLoadEvent } from '@sveltejs/kit'
 
-type CatalogLoadEvent = Pick<ServerLoadEvent, 'url' | 'depends'> & { params: { slugs?: string } }
+export type CatalogPageLoad =
+  { status: 'not-found' } | { status: 'ok'; query: Catalog.Query; result: Catalog.Result }
 
-export const loadCatalogPage = async ({ params, url, depends }: CatalogLoadEvent) => {
-  depends(CATALOG_DEPENDENCY)
-  const slugs = parseCategorySlugs(params.slugs)
-
-  const query = parseCatalogQuery(url.searchParams)
+/**
+ * Cas d'utilisation « afficher une page du catalogue » : lit l'état de recherche, interroge le
+ * dépôt, puis décide. Catégorie inconnue ou page au-delà de la dernière : introuvable. Échec du
+ * dépôt : résultat en erreur, que l'interface affiche avec une relance.
+ */
+export const loadCatalogPage = async (
+  rawSlugs: string | undefined,
+  searchParams: URLSearchParams,
+): Promise<CatalogPageLoad> => {
+  const query = parseCatalogQuery(searchParams)
 
   let listing: Catalog.Listing | null
   try {
-    listing = await findCatalogListing(slugs, query)
+    listing = await findCatalogListing(parseCategorySlugs(rawSlugs), query)
   } catch {
-    const result: Catalog.Result = { status: 'error', message: new CatalogLoadError().message }
-    return { query, result }
+    return {
+      status: 'ok',
+      query,
+      result: { status: 'error', message: new CatalogLoadError().message },
+    }
   }
 
-  if (!listing) error(404, 'Catégorie introuvable')
-  if (query.page > listing.totalPages) error(404, 'Page introuvable')
+  if (!listing || query.page > listing.totalPages) return { status: 'not-found' }
 
-  const result: Catalog.Result = { status: 'success', listing }
-  return { query, result }
+  return { status: 'ok', query, result: { status: 'success', listing } }
 }
-
-export const getCategoryMenu = () => toCategoryMenu(findCategoryTree())
-
-export const listCatalogPaths = () => listCategoryPaths(findCategoryTree())

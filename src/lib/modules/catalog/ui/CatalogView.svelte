@@ -6,7 +6,7 @@
   import { Icon, SidePanel } from '#lib/shared/ui/kit'
   import { PageHeader } from '#lib/shared/ui/layout'
 
-  import { clearCatalogFilters, countActiveFilters, isIndexable } from '../domain/catalogQuery'
+  import { clearFilters, countActiveFilters, isFiltered } from '../domain/catalogQuery'
   import { CATALOG_ROOT_PATH, categoryTrail } from '../domain/categoryPath'
   import ActiveFilters from './ActiveFilters.svelte'
   import CatalogFilters from './CatalogFilters.svelte'
@@ -37,7 +37,7 @@
   )
   const firstProduct = $derived(listing?.products[0])
   const seo = $derived<Omit<Seo.Input, 'title' | 'description' | 'path' | 'breadcrumb'>>({
-    noindex: !isIndexable(query),
+    noindex: isFiltered(query),
     canonicalPath: query.page >= 2 ? `${path}?page=${query.page}` : path,
     prevPath: query.page > 1 ? catalogHref(path, { ...query, page: query.page - 1 }) : undefined,
     nextPath:
@@ -84,7 +84,7 @@
 
 {#snippet clearAction()}
   <a
-    href={catalogHref(path, clearCatalogFilters(query))}
+    href={catalogHref(path, clearFilters(query))}
     class="btn btn-outline"
     data-testid="catalog-clear-filters"
   >

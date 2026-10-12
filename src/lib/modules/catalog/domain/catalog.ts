@@ -6,21 +6,6 @@ export const SORTS = ['pertinence', 'prix-asc', 'prix-desc', 'nom'] as const
 export const VIEWS = ['grille', 'liste'] as const
 export const PAGE_SIZE = 12
 
-export const EXPOSURE_LABELS: Record<Catalog.Exposure, string> = {
-  soleil: 'Soleil',
-  'mi-ombre': 'Mi-ombre',
-  ombre: 'Ombre',
-}
-
-export const SIZE_LABELS: Record<Catalog.Size, string> = { S: 'Petite', M: 'Moyenne', L: 'Grande' }
-
-export const SORT_LABELS: Record<Catalog.Sort, string> = {
-  pertinence: 'Pertinence',
-  'prix-asc': 'Prix croissant',
-  'prix-desc': 'Prix décroissant',
-  nom: 'Nom (A à Z)',
-}
-
 export declare namespace Catalog {
   type Exposure = (typeof EXPOSURES)[number]
   type Size = (typeof SIZES)[number]

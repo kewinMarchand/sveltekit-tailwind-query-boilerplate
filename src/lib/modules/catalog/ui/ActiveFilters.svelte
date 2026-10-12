@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { listActiveFilters } from '../domain/catalogQuery'
+  import { listActiveFilters } from './activeFilters'
   import { catalogHref } from './hooks/useCatalogNavigation.svelte'
 
   import type { Catalog } from '../domain/catalog'

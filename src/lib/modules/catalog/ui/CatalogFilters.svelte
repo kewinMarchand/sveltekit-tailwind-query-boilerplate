@@ -1,8 +1,8 @@
 <script lang="ts">
   import { resolveHref } from '#lib/shared/routing'
 
-  import { EXPOSURE_LABELS, SIZE_LABELS } from '../domain/catalog'
   import { queryEntries } from '../domain/catalogQuery'
+  import { EXPOSURE_LABELS, SIZE_LABELS } from './labels'
 
   import type { Catalog } from '../domain/catalog'
 

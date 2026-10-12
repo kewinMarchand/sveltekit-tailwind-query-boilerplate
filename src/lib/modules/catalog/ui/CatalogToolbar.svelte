@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { SORT_LABELS, SORTS } from '../domain/catalog'
+  import { SORTS } from '../domain/catalog'
   import { queryEntries } from '../domain/catalogQuery'
   import { catalogHref } from './hooks/useCatalogNavigation.svelte'
+  import { SORT_LABELS } from './labels'
 
   import type { Catalog } from '../domain/catalog'
   import type { AppPath } from '#lib/shared/routing'

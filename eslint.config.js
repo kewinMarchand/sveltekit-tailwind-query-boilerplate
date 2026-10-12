@@ -28,18 +28,24 @@ const CAROUSEL_WRAPPER = {
   message: 'Embla passe par le wrapper #lib/shared/ui/carousel.',
 }
 
-const FRAMEWORKS = {
-  group: [
-    'svelte',
-    'svelte/*',
-    '$app/*',
-    '@sveltejs/*',
-    '@tanstack/*',
-    'bits-ui',
-    'sveltekit-superforms',
-    'sveltekit-superforms/*',
-  ],
+const FRAMEWORK_PACKAGES = [
+  'svelte',
+  'svelte/*',
+  '$app/*',
+  '@sveltejs/*',
+  '@tanstack/*',
+  'bits-ui',
+  'sveltekit-superforms',
+  'sveltekit-superforms/*',
+]
+const FRAMEWORKS_IN_DOMAIN = {
+  group: FRAMEWORK_PACKAGES,
   message: 'Le domaine ne dépend d’aucun framework : données immuables et fonctions pures.',
+}
+const FRAMEWORKS_IN_APPLICATION = {
+  group: FRAMEWORK_PACKAGES,
+  message:
+    'L’application ne dépend d’aucun framework : elle renvoie une union que la route traduit.',
 }
 
 const sameModule = (type) => ({
@@ -195,7 +201,16 @@ export default defineConfig(
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, FRAMEWORKS] },
+        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, FRAMEWORKS_IN_DOMAIN] },
+      ],
+    },
+  },
+  {
+    files: ['src/lib/modules/*/application/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, FRAMEWORKS_IN_APPLICATION] },
       ],
     },
   },

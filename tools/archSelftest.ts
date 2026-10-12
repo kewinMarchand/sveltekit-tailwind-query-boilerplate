@@ -30,6 +30,12 @@ const VIOLATIONS: readonly Violation[] = [
     expected: 'Le domaine ne dépend d’aucun framework',
   },
   {
+    rule: 'application vers framework',
+    file: 'src/lib/modules/catalog/application/archSelftestViolation.ts',
+    source: "export { error } from '@sveltejs/kit'\n",
+    expected: 'L’application ne dépend d’aucun framework',
+  },
+  {
     rule: 'module vers autre module',
     file: 'src/lib/modules/blog/ui/archSelftestViolation.ts',
     source: "export { CatalogView } from '#lib/modules/catalog'\n",

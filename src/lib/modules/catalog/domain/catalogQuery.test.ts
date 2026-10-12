@@ -1,11 +1,10 @@
 import {
-  clearCatalogFilters,
+  clearFilters,
   DEFAULT_QUERY,
-  isIndexable,
-  listActiveFilters,
+  isFiltered,
   parseCatalogQuery,
   serializeCatalogQuery,
-  updateCatalogQuery,
+  withFilter,
 } from './catalogQuery'
 
 const parse = (search: string) => parseCatalogQuery(new URLSearchParams(search))
@@ -47,10 +46,10 @@ describe('serializeCatalogQuery', () => {
   })
 })
 
-describe('updateCatalogQuery', () => {
+describe('withFilter', () => {
   it('remet la page à 1 et conserve les autres paramètres', () => {
     const query = parse('vue=liste&tri=nom&page=2')
-    expect(updateCatalogQuery(query, { exposures: ['soleil'] })).toEqual({
+    expect(withFilter(query, { exposures: ['soleil'] })).toEqual({
       ...query,
       exposures: ['soleil'],
       page: 1,
@@ -58,23 +57,18 @@ describe('updateCatalogQuery', () => {
   })
 })
 
-describe('filtres actifs', () => {
-  it('liste une puce par filtre, chacune retirant le sien seulement', () => {
-    const filters = listActiveFilters(parse('exposition=mi-ombre&taille=S&en_stock=1'))
-    expect(filters.map((filter) => filter.label)).toEqual(['Mi-ombre', 'Taille petite', 'En stock'])
-    expect(filters[0]?.query.exposures).toEqual([])
-    expect(filters[0]?.query.sizes).toEqual(['S'])
-  })
-
+describe('variantes de la liste', () => {
   it('tout effacer garde la vue et retire filtres et tri', () => {
-    expect(clearCatalogFilters(parse('exposition=soleil&tri=nom&vue=liste'))).toEqual({
+    expect(clearFilters(parse('exposition=soleil&tri=nom&vue=liste'))).toEqual({
       ...DEFAULT_QUERY,
       view: 'liste',
     })
   })
 
-  it('n’indexe que la liste sans filtre ni tri', () => {
-    expect(isIndexable(parse('page=2'))).toBe(true)
-    expect(isIndexable(parse('tri=nom'))).toBe(false)
+  it('considère comme filtrée toute liste avec filtre, tri ou vue liste', () => {
+    expect(isFiltered(parse('page=2'))).toBe(false)
+    expect(isFiltered(parse('tri=nom'))).toBe(true)
+    expect(isFiltered(parse('vue=liste'))).toBe(true)
+    expect(isFiltered(parse('en_stock=1'))).toBe(true)
   })
 })
