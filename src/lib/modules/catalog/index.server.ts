@@ -1,5 +1,5 @@
 export {
+  getCategoryMenu,
   listCatalogPaths,
   loadCatalogPage,
-  loadCategoryMenu,
 } from './application/catalogPage.server'

@@ -1,9 +1,4 @@
-import {
-  categoryPath,
-  collectLeafSlugs,
-  findCategoryChain,
-  listCategoryPaths,
-} from './categoryTree'
+import { collectLeafSlugs, findCategoryChain } from './categoryTree'
 
 import type { Catalog } from './catalog'
 
@@ -28,17 +23,5 @@ describe('arbre de catégories', () => {
 
   it('collecte les feuilles d’une branche', () => {
     expect(collectLeafSlugs(TREE[0] ?? node('vide'))).toEqual(['a1x', 'a1y', 'a2'])
-  })
-
-  it('construit les chemins de toutes les catégories', () => {
-    expect(categoryPath([])).toBe('/catalogue')
-    expect(listCategoryPaths(TREE)).toEqual([
-      '/catalogue/a',
-      '/catalogue/a/a1',
-      '/catalogue/a/a1/a1x',
-      '/catalogue/a/a1/a1y',
-      '/catalogue/a/a2',
-      '/catalogue/b',
-    ])
   })
 })

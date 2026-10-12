@@ -1,6 +1,7 @@
 import { EXPOSURES, SIZES } from '../domain/catalog'
 import { countFacetValues, filterProducts, paginate, sortProducts } from '../domain/catalogListing'
-import { categoryPath, collectLeafSlugs, findCategoryChain } from '../domain/categoryTree'
+import { categoryHref, resolveCategoryPath } from '../domain/categoryPath'
+import { collectLeafSlugs, findCategoryChain } from '../domain/categoryTree'
 import { CATEGORY_TREE, PRODUCTS } from './catalogData'
 
 import type { Catalog } from '../domain/catalog'
@@ -24,8 +25,9 @@ export const findCatalogListing = (
   slugs: string[],
   query: Catalog.Query,
 ): Promise<Catalog.Listing | null> => {
+  const path = resolveCategoryPath(CATEGORY_TREE, slugs)
   const chain = findCategoryChain(CATEGORY_TREE, slugs)
-  if (!chain) return delay(null)
+  if (!path || !chain) return delay(null)
 
   const current = chain.at(-1)
   const children = current ? current.children : CATEGORY_TREE
@@ -34,16 +36,12 @@ export const findCatalogListing = (
   const { items, page, totalPages } = paginate(filtered, query.page)
 
   return delay({
-    chain: chain.map((category, index) => ({
-      slug: category.slug,
-      name: category.name,
-      path: categoryPath(slugs.slice(0, index + 1)),
-    })),
+    chain: path,
     description: current?.description ?? ROOT_DESCRIPTION,
     children: children.map((child) => ({
       slug: child.slug,
       name: child.name,
-      path: categoryPath([...slugs, child.slug]),
+      path: categoryHref([...slugs, child.slug]),
       count: filterProducts(productsOf([child]), query).length,
     })),
     products: items,

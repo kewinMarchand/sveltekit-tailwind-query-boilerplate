@@ -53,6 +53,9 @@ export declare namespace Catalog {
     path: AppPath
   }
 
+  /** Chaîne des catégories de la racine à la catégorie courante, validée contre l'arbre. */
+  type CategoryPath = CategoryLink[]
+
   interface Query {
     exposures: Exposure[]
     sizes: Size[]
@@ -75,7 +78,7 @@ export declare namespace Catalog {
   }
 
   interface Listing {
-    chain: CategoryLink[]
+    chain: CategoryPath
     description: string
     children: (CategoryLink & { count: number })[]
     products: Product[]

@@ -7,7 +7,7 @@
   import { PageHeader } from '#lib/shared/ui/layout'
 
   import { clearCatalogFilters, countActiveFilters, isIndexable } from '../domain/catalogQuery'
-  import { CATALOG_ROOT_PATH } from '../domain/categoryTree'
+  import { CATALOG_ROOT_PATH, categoryTrail } from '../domain/categoryPath'
   import ActiveFilters from './ActiveFilters.svelte'
   import CatalogFilters from './CatalogFilters.svelte'
   import CatalogToolbar from './CatalogToolbar.svelte'
@@ -32,10 +32,7 @@
   const title = $derived(current?.name ?? CATALOG_NAVIGATION.label)
   const parents = $derived<Seo.BreadcrumbItem[]>(
     current
-      ? [
-          { label: CATALOG_NAVIGATION.label, path: CATALOG_ROOT_PATH },
-          ...chain.slice(0, -1).map((link) => ({ label: link.name, path: link.path })),
-        ]
+      ? [{ label: CATALOG_NAVIGATION.label, path: CATALOG_ROOT_PATH }, ...categoryTrail(chain)]
       : [],
   )
   const firstProduct = $derived(listing?.products[0])
