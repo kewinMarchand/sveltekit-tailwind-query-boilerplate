@@ -39,13 +39,13 @@
   bind:open
   title="Menu"
   side="right"
-  triggerClass="btn btn-nav"
+  triggerClass="btn btn-nav btn-icon"
+  triggerLabel="Menu"
   triggerTestId="layout-mobile-menu-toggle"
   panelTestId="layout-mobile-menu"
 >
   {#snippet trigger()}
     <Icon name="menu" />
-    Menu
   {/snippet}
 
   <nav aria-label="Menu mobile">

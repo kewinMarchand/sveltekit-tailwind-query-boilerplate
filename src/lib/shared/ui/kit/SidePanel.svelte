@@ -10,6 +10,7 @@
     title: string
     side?: 'left' | 'right'
     triggerClass?: string
+    triggerLabel?: string
     triggerTestId?: string
     panelTestId?: string
     trigger: Snippet
@@ -21,6 +22,7 @@
     title,
     side = 'left',
     triggerClass,
+    triggerLabel,
     triggerTestId,
     panelTestId,
     trigger,
@@ -29,7 +31,7 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Trigger class={triggerClass} data-testid={triggerTestId}>
+  <Dialog.Trigger class={triggerClass} aria-label={triggerLabel} data-testid={triggerTestId}>
     {@render trigger()}
   </Dialog.Trigger>
   <Dialog.Portal>

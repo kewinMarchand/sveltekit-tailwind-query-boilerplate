@@ -21,10 +21,10 @@
 </script>
 
 <header class="bg-primary text-on-primary">
-  <div class="container-page flex min-h-16 flex-wrap items-center gap-2 py-2">
+  <div class="container-page header-bar">
     <a
       href={resolve('/')}
-      class="logo-link grow"
+      class="logo-link min-w-0 grow"
       aria-current={page.url.pathname === '/' ? 'page' : undefined}
       data-testid="layout-logo"
     >
@@ -43,9 +43,9 @@
         {/each}
       </ul>
     </nav>
-    <A11yModeToggle />
     <div class="hidden js:max-lg:block">
       <MobileMenu nodes={categoryMenu} />
     </div>
+    <A11yModeToggle />
   </div>
 </header>

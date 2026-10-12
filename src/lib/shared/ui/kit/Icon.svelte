@@ -1,5 +1,4 @@
 <script lang="ts" module>
-  import Accessibility from '@lucide/svelte/icons/accessibility'
   import ChevronDown from '@lucide/svelte/icons/chevron-down'
   import ChevronLeft from '@lucide/svelte/icons/chevron-left'
   import ChevronRight from '@lucide/svelte/icons/chevron-right'
@@ -10,13 +9,14 @@
   import LoaderCircle from '@lucide/svelte/icons/loader-circle'
   import Mail from '@lucide/svelte/icons/mail'
   import MenuIcon from '@lucide/svelte/icons/menu'
+  import PersonStanding from '@lucide/svelte/icons/person-standing'
   import RotateCw from '@lucide/svelte/icons/rotate-cw'
   import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal'
   import TriangleAlert from '@lucide/svelte/icons/triangle-alert'
   import X from '@lucide/svelte/icons/x'
 
   const ICONS = {
-    accessibility: Accessibility,
+    accessibility: PersonStanding,
     'chevron-down': ChevronDown,
     'chevron-left': ChevronLeft,
     'chevron-right': ChevronRight,
