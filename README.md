@@ -51,15 +51,16 @@ make up        # http://localhost:5173
 
 Variables d'environnement (`.env`, déclarées et validées dans `src/env.ts`). Le `Makefile` charge `.env` et l'exporte vers chaque commande, `make start` le relit aussi :
 
-| Variable                                | Rôle                                                                                                        |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `PUBLIC_SITE_URL`                       | URL publique, utilisée pour les URL canoniques, Open Graph, le JSON-LD et le sitemap                        |
-| `ORIGIN`                                | Origine servie par `make start`, figée par `make build` (protection CSRF des formulaires, voir `CLAUDE.md`) |
-| `MAINTENANCE`                           | `1` : toutes les pages répondent 503 avec la page de maintenance statique                                   |
-| `DEV_ROUTES`                            | `1` : expose `/charte-graphique` et `/_erreur-test` hors du serveur de développement                        |
-| `GLITCHTIP_DSN`, `PUBLIC_GLITCHTIP_DSN` | Suivi des erreurs GlitchTip, côté serveur et navigateur. Vides : aucun SDK chargé, aucune requête           |
-| `PUBLIC_GLITCHTIP_ENVIRONMENT`          | Environnement déclaré à GlitchTip (défaut : `development` ou `production`)                                  |
-| `API_SCHEMA_URL`                        | Schéma OpenAPI de l'API consommée, lu par `make api-types`                                                  |
+| Variable                                     | Rôle                                                                                                                           |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `PUBLIC_SITE_URL`                            | URL publique, utilisée pour les URL canoniques, Open Graph, le JSON-LD et le sitemap                                           |
+| `ORIGIN`                                     | Origine servie par `make start`, figée par `make build` (protection CSRF des formulaires, voir `CLAUDE.md`)                    |
+| `MAINTENANCE`                                | `1` : toutes les pages répondent 503 avec la page de maintenance statique                                                      |
+| `DEV_ROUTES`                                 | `1` : expose `/charte-graphique` et `/_erreur-test` hors du serveur de développement                                           |
+| `GLITCHTIP_DSN`, `PUBLIC_GLITCHTIP_DSN`      | Suivi des erreurs GlitchTip, côté serveur et navigateur. Vides : aucun SDK chargé, aucune requête                              |
+| `PUBLIC_GLITCHTIP_ENVIRONMENT`               | Environnement déclaré à GlitchTip (défaut : `development` ou `production`)                                                     |
+| `PUBLIC_MATOMO_URL`, `PUBLIC_MATOMO_SITE_ID` | Mesure d'audience Matomo sans cookie. Vides : aucun script, aucune requête, pas de paragraphe sur la page Données personnelles |
+| `API_SCHEMA_URL`                             | Schéma OpenAPI de l'API consommée, lu par `make api-types`                                                                     |
 
 ## Démarrer un projet à partir de ce dépôt
 

@@ -3,6 +3,8 @@ import '@testing-library/jest-dom/vitest'
 vi.mock('$app/env/public', () => ({
   PUBLIC_SITE_URL: 'http://localhost:5173',
   PUBLIC_GLITCHTIP_DSN: undefined,
+  PUBLIC_MATOMO_URL: undefined,
+  PUBLIC_MATOMO_SITE_ID: undefined,
   PUBLIC_GLITCHTIP_ENVIRONMENT: undefined,
 }))
 vi.mock('$app/env/private', () => ({

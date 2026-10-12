@@ -1,6 +1,8 @@
 <script lang="ts">
   import '#lib/shared/theme/theme.css'
 
+  import { useMatomo } from '#lib/shared/observability'
+
   import Footer from './Footer.svelte'
   import Header from './Header.svelte'
 
@@ -13,6 +15,8 @@
   }
 
   const { categoryMenu, children }: Props = $props()
+
+  useMatomo()
 </script>
 
 <div class="flex min-h-screen flex-col">

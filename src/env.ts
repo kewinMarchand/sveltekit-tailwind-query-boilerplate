@@ -21,6 +21,16 @@ export const variables = defineEnvVars({
     schema: flag,
     description: 'À 1, toutes les pages répondent 503 avec la page de maintenance statique',
   },
+  PUBLIC_MATOMO_URL: {
+    public: true,
+    schema: optionalUrl,
+    description: 'URL de l’instance Matomo. Vide : aucune mesure d’audience, aucun script',
+  },
+  PUBLIC_MATOMO_SITE_ID: {
+    public: true,
+    schema: optionalText,
+    description: 'Identifiant du site dans Matomo',
+  },
   GLITCHTIP_DSN: {
     schema: optionalUrl,
     description: 'DSN GlitchTip du serveur. Vide : aucun suivi des erreurs côté serveur',
