@@ -1,4 +1,4 @@
-import { contactActions, loadContactPage } from '@/domains/contact/index.server'
+import { contactActions, loadContactPage } from '#lib/modules/contact/index.server'
 
 import type { Actions, PageServerLoad } from './$types'
 

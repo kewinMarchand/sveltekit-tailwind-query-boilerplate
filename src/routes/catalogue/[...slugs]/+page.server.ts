@@ -1,4 +1,4 @@
-import { loadCatalogPage } from '@/domains/catalog/index.server'
+import { loadCatalogPage } from '#lib/modules/catalog/index.server'
 
 import type { PageServerLoad } from './$types'
 

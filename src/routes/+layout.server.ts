@@ -1,4 +1,4 @@
-import { loadCategoryMenu } from '@/domains/catalog/index.server'
+import { loadCategoryMenu } from '#lib/modules/catalog/index.server'
 
 import type { LayoutServerLoad } from './$types'
 

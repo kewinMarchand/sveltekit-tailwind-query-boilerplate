@@ -1,3 +1,5 @@
+import { existsSync, readdirSync } from 'node:fs'
+import boundaries from '@boundaries/eslint-plugin'
 import js from '@eslint/js'
 import { defineConfig } from 'eslint/config'
 import prettier from 'eslint-config-prettier'
@@ -6,19 +8,97 @@ import svelte from 'eslint-plugin-svelte'
 import globals from 'globals'
 import ts from 'typescript-eslint'
 
-const RELATIVE_DEPTH = { group: ['../../*'], message: 'Utiliser l’alias @/ au-delà d’un niveau.' }
+const MODULES_ROOT = 'src/lib/modules'
+const LAYERS = ['domain', 'application', 'infrastructure', 'ui']
+
+const MODULES_WITHOUT_APPLICATION = readdirSync(MODULES_ROOT).filter(
+  (module) => !existsSync(`${MODULES_ROOT}/${module}/application`),
+)
+
+const RELATIVE_DEPTH = {
+  group: ['../../*'],
+  message: 'Utiliser l’alias #lib/ au-delà d’un niveau.',
+}
 const ICONS_WRAPPER = {
   group: ['@lucide/svelte', '@lucide/svelte/*'],
-  message: 'Les icônes passent par le wrapper @/core/ui/ui-kit/Icon.',
+  message: 'Les icônes passent par le wrapper #lib/shared/ui/kit/Icon.',
 }
 const CAROUSEL_WRAPPER = {
   group: ['embla-carousel', 'embla-carousel-*'],
-  message: 'Embla passe par la feature @/features/carousel.',
+  message: 'Embla passe par le wrapper #lib/shared/ui/carousel.',
 }
-const DOMAIN_PUBLIC_API = {
-  group: ['@/domains/*/*', '!@/domains/*/index.server'],
-  message: "Un domaine s'importe uniquement via son index.ts (ou index.server.ts) public.",
+
+const FRAMEWORKS = {
+  group: [
+    'svelte',
+    'svelte/*',
+    '$app/*',
+    '@sveltejs/*',
+    '@tanstack/*',
+    'bits-ui',
+    'sveltekit-superforms',
+    'sveltekit-superforms/*',
+  ],
+  message: 'Le domaine ne dépend d’aucun framework : données immuables et fonctions pures.',
 }
+
+const sameModule = (type) => ({
+  element: { type, captured: { module: '{{ from.element.captured.module }}' } },
+})
+
+const policy = (from, to, message, extra = {}) => ({
+  from: { element: { type: from } },
+  allow: { to: typeof to === 'string' ? { element: { type: to } } : to, ...extra },
+  message,
+})
+
+const ARCHITECTURE_POLICIES = [
+  policy('routes', 'views', 'Routage : vues, index public des modules et socle seulement.'),
+  policy('routes', 'module', 'Routage : vues, index public des modules et socle seulement.'),
+  policy('routes', 'shared', 'Routage : vues, index public des modules et socle seulement.'),
+  policy('views', 'module', 'Vue : index public des modules et socle seulement.'),
+  policy('views', 'shared', 'Vue : index public des modules et socle seulement.'),
+  policy(
+    'views',
+    { element: { type: 'views', captured: { view: '{{ from.element.captured.view }}' } } },
+    'Vue : index public des modules et socle seulement.',
+  ),
+  ...LAYERS.map((layer) =>
+    policy('module', sameModule(layer), 'Index public : seulement les couches de son module.'),
+  ),
+  policy('domain', sameModule('domain'), 'Domaine : seulement le domaine de son module.'),
+  policy('domain', 'shared', 'Domaine : seulement les types du socle.', {
+    dependency: { kind: 'type' },
+  }),
+  policy('application', sameModule('domain'), 'Application : domaine et infrastructure du module.'),
+  policy(
+    'application',
+    sameModule('infrastructure'),
+    'Application : domaine et infrastructure du module.',
+  ),
+  policy('application', 'shared', 'Application : seulement les types du socle.', {
+    dependency: { kind: 'type' },
+  }),
+  policy(
+    'infrastructure',
+    sameModule('domain'),
+    'Infrastructure : domaine du module et client HTTP.',
+  ),
+  policy('infrastructure', 'shared-api', 'Infrastructure : domaine du module et client HTTP.'),
+  policy('ui', sameModule('domain'), 'Interface : domaine, application et interface du module.'),
+  policy(
+    'ui',
+    sameModule('application'),
+    'Interface : domaine, application et interface du module.',
+  ),
+  policy('ui', sameModule('ui'), 'Interface : domaine, application et interface du module.'),
+  policy('ui', 'shared', 'Interface : domaine, application et interface du module.'),
+  ...MODULES_WITHOUT_APPLICATION.map((module) => ({
+    from: { element: { type: 'ui', captured: { module } } },
+    allow: { to: sameModule('infrastructure') },
+  })),
+  policy('shared', 'shared', 'Socle : n’importe ni module, ni vue, ni routage.'),
+]
 
 export default defineConfig(
   {
@@ -29,7 +109,7 @@ export default defineConfig(
       'playwright-report/**',
       'test-results/**',
       '.lighthouseci/**',
-      'src/core/api/schema.d.ts',
+      'src/lib/shared/api/schema.d.ts',
     ],
   },
   js.configs.recommended,
@@ -64,7 +144,7 @@ export default defineConfig(
           groups: [
             ['^\\u0000'],
             ['^node:', '^@?\\w', '^\\$app(?![\\w-])'],
-            ['^@/'],
+            ['^#lib/'],
             ['^\\.'],
             ['^.+\\u0000$'],
           ],
@@ -78,20 +158,57 @@ export default defineConfig(
     },
   },
   {
-    files: ['src/routes/**', 'src/core/**', 'src/features/**'],
+    files: ['src/**/*.ts', 'src/**/*.svelte'],
+    plugins: { boundaries },
+    settings: {
+      'import/resolver': { typescript: { alwaysTryTypes: true, project: './tsconfig.json' } },
+      'boundaries/elements': [
+        ...LAYERS.map((layer) => ({
+          type: layer,
+          pattern: `${MODULES_ROOT}/*/${layer}`,
+          capture: ['module'],
+          partialMatch: false,
+          exclusive: true,
+        })),
+        { type: 'module', pattern: `${MODULES_ROOT}/*`, capture: ['module'], partialMatch: false },
+        { type: 'shared-api', pattern: 'src/lib/shared/api', partialMatch: false, exclusive: true },
+        { type: 'shared', pattern: 'src/lib/shared/*', capture: ['area'], partialMatch: false },
+        { type: 'views', pattern: 'src/lib/views/*', capture: ['view'], partialMatch: false },
+        { type: 'routes', pattern: 'src/routes', partialMatch: false },
+      ],
+    },
     rules: {
-      'no-restricted-imports': [
+      'boundaries/dependencies': [
         'error',
-        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, DOMAIN_PUBLIC_API] },
+        {
+          default: 'disallow',
+          checkInternals: false,
+          message:
+            'Architecture : la couche « {{ from.element.type }} » ne peut pas importer « {{ to.element.type }} ».',
+          policies: ARCHITECTURE_POLICIES,
+        },
       ],
     },
   },
   {
-    files: ['src/core/ui/ui-kit/Icon.svelte'],
+    files: ['src/lib/modules/*/domain/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, FRAMEWORKS] },
+      ],
+    },
+  },
+  {
+    files: ['tools/**'],
+    rules: { 'no-console': 'off' },
+  },
+  {
+    files: ['src/lib/shared/ui/kit/Icon.svelte'],
     rules: { 'no-restricted-imports': ['error', { patterns: [RELATIVE_DEPTH, CAROUSEL_WRAPPER] }] },
   },
   {
-    files: ['src/features/carousel/**'],
+    files: ['src/lib/shared/ui/carousel/**'],
     rules: { 'no-restricted-imports': ['error', { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER] }] },
   },
 )

@@ -5,20 +5,22 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 ## Choix du projet
 
 - **Type** : application SvelteKit 3, rendu serveur, `adapter-node`. Configuration dans `vite.config.ts` (SvelteKit 3 ne lit plus `svelte.config.js`).
-- **Routage** : `src/routes/` ne contient que du câblage (`load`, `actions`, rendu d'une vue). Le serveur passe par `domains/<x>/index.server.ts`, le client par `domains/<x>/index.ts`.
-- **Logique** : état et effets dans des modules `.svelte.ts` (`ui/hooks/useXxx.svelte.ts`), fonctions pures dans `common/models/`.
-- **Design system** : Tailwind CSS 4, tokens en `@theme static` dans `src/core/theme/theme.css` (émis même inutilisés, pour que la charte les lise). Classes longues factorisées en `@layer components`. Variantes `js:` et `no-js:` selon la classe `js` posée sur `<html>` par `app.html`.
+- **Architecture** : quatre racines, `src/routes/` (routage), `src/lib/views/` (pages sans métier ou qui composent des modules), `src/lib/modules/` (`catalog` en forme complète, `blog`, `contact`, `task` en forme réduite sans `application/`), `src/lib/shared/` (socle). Référence des cinq fronts pour le document d'architecture commun (D1 à D12).
+- **Routage** : `src/routes/` ne contient que du câblage (`load`, `actions`, rendu d'une vue). Le serveur passe par `modules/<x>/index.server.ts`, le client par `modules/<x>/index.ts`.
+- **Alias** : `#lib/*` (subpath imports de `package.json`) et le même motif dans `paths` du `tsconfig.json`. SvelteKit 3 a retiré `$lib` (erreur `module_removed_lib`), il ne se garde qu'avec l'option `alias` dépréciée : `#lib` est désormais la convention native.
+- **Logique** : état et effets dans des modules `.svelte.ts` (`ui/hooks/useXxx.svelte.ts`), fonctions pures dans `domain/`.
+- **Design system** : Tailwind CSS 4, tokens en `@theme static` dans `src/lib/shared/theme/theme.css` (émis même inutilisés, pour que la charte les lise). Classes longues factorisées en `@layer components`. Variantes `js:` et `no-js:` selon la classe `js` posée sur `<html>` par `app.html`.
 - **Primitives** : bits-ui, uniquement `Button` (lien ou bouton selon `href`) et `Dialog` (panneaux latéraux : filtres mobiles, menu mobile). Le menu de catégories desktop est un disclosure maison : `NavigationMenu` de bits-ui ouvre au survol et place son viewport sous toute la liste racine, la spec exige l'ouverture au clic et un panneau ancré au bouton.
 - **Données client** : TanStack Svelte Query. Un `QueryClient` par instance du layout (donc par requête côté serveur), `enabled: browser` pour ne rien charger au rendu serveur. Devtools en développement seulement, par import dynamique.
 - **Données serveur** : `load` serveur pour le blog de l'accueil et le catalogue (contenu SEO), avec dépendances (`depends`) pour la relance.
 - **Formulaires** : sveltekit-superforms + zod (`zod4` / `zod4Client`), form action serveur, `use:enhance`. Le formulaire fonctionne sans JavaScript.
-- **Catalogue** : état dans l'URL, seule source de vérité. Filtrage, comptage disjonctif, tri et pagination sont des fonctions pures testées (`domains/catalog/common/models/`).
-- **Icônes** : `@lucide/svelte`, uniquement via `src/core/ui/ui-kit/Icon.svelte` (règle ESLint), import par icône (`@lucide/svelte/icons/<nom>`).
-- **Carrousel** : Embla Carousel 8 et son adaptateur Svelte, uniquement dans `src/features/carousel/` (règle ESLint). Sans JS, la piste reste en `overflow-x: auto` + `scroll-snap`.
+- **Catalogue** : état dans l'URL, seule source de vérité. Filtrage, comptage disjonctif, tri et pagination sont des fonctions pures testées (`modules/catalog/domain/`).
+- **Icônes** : `@lucide/svelte`, uniquement via `src/lib/shared/ui/kit/Icon.svelte` (règle ESLint), import par icône (`@lucide/svelte/icons/<nom>`).
+- **Carrousel** : Embla Carousel 8 et son adaptateur Svelte, uniquement dans `src/lib/shared/ui/carousel/` (règle ESLint). Sans JS, la piste reste en `overflow-x: auto` + `scroll-snap`.
 - **Police** : Inter variable via `@fontsource-variable/inter`, servie localement. Unité de police : `px`.
 - **Environnement** : variables déclarées et validées par zod dans `src/env.ts` (`defineEnvVars`), lues via `$app/env/public` et `$app/env/private`.
 - **Langue** : français uniquement. URLs en français.
-- **API** : aucune. Les dépôts des domaines (`api/`) renvoient des données en mémoire avec latence. `make api-types` génère `src/core/api/schema.d.ts` quand `API_SCHEMA_URL` est renseigné.
+- **API** : aucune. Les dépôts des modules (`infrastructure/`) renvoient des données en mémoire avec latence. `make api-types` génère `src/lib/shared/api/schema.d.ts` quand `API_SCHEMA_URL` est renseigné. Seule la couche `infrastructure/` des modules a le droit d'importer ces types.
 - **Cibles tactiles** : 44 px minimum (token `--spacing-touch`).
 - **Ports** : dev 5173, Playwright 3120 (3121 pour le test du build sans routes de dev), Lighthouse 3220. Imposés pour ne pas entrer en collision avec les autres boilerplates.
 - **Dépendances** : toutes en `devDependencies`. `adapter-node` embarque tout ce qui n'est pas en `dependencies`, le dossier `build/` est autonome et l'image Docker n'a pas de `node_modules`.
@@ -36,24 +38,29 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 
 ## Dépendances ajoutées hors de la stack imposée
 
-- `eslint-plugin-simple-import-sort` : impose l'ordre externes, `@/`, relatifs, types, que le modèle Next obtenait d'`eslint-plugin-import`. Léger, compatible ESLint 10 et fichiers `.svelte`.
+- `@boundaries/eslint-plugin` 7.2 (dev, environ 3 Mo installés avec `@boundaries/elements`, aucun effet sur le bundle) : vérifie les règles de dépendance entre couches et modules (D6). Contrairement à `no-restricted-imports`, qui compare la chaîne d'import, il résout le chemin réel : un import relatif `../infrastructure/x` ne le contourne pas. Compatible ESLint 10 (peer `>=6`) et fichiers `.svelte`, vérifié par l'auto-test. C'est le nouveau nom de `eslint-plugin-boundaries`, que l'ancien paquet annonce comme remplaçant.
+- `eslint-import-resolver-typescript` 4.4 (dev, environ 4,7 Mo avec `unrs-resolver`) : résolveur demandé par le plugin pour suivre `#lib/*` via le `tsconfig.json`.
+- `eslint-plugin-simple-import-sort` : impose l'ordre externes, `#lib/`, relatifs, types, que le modèle Next obtenait d'`eslint-plugin-import`. Léger, compatible ESLint 10 et fichiers `.svelte`.
 - `@internationalized/date` et `@testing-library/dom` : peers, voir le tableau.
 
 ## Règles ESLint propres au projet
 
-- `@typescript-eslint/no-namespace` avec `allowDeclarations` : les types de domaine sont en `export declare namespace Xxx {}`.
+- `@typescript-eslint/no-namespace` avec `allowDeclarations` : les types de module sont en `export declare namespace Xxx {}`.
+- `boundaries/dependencies` (refus par défaut) : routage vers vues, index des modules et socle. Vues vers index des modules et socle. Index d'un module vers ses propres couches. `domain/` vers son module et les types du socle (`import type` seulement). `application/` vers domaine et infrastructure du module, et types du socle. `infrastructure/` vers domaine du module et `shared/api`. `ui/` vers domaine, application, interface du module et socle, plus infrastructure si le module n'a pas d'`application/` (liste calculée en lisant le disque). Socle vers socle seulement. La valeur capturée `module` interdit tout import d'un module à l'autre.
 - `no-restricted-imports` :
-  - import profond d'un domaine (`@/domains/x/...`) interdit depuis `routes/`, `core/` et `features/`, sauf `index.server` ;
+  - frameworks interdits dans `domain/` (`svelte`, `$app/*`, `@sveltejs/*`, `@tanstack/*`, `bits-ui`, `sveltekit-superforms`) ;
   - `@lucide/svelte` interdit hors du wrapper `Icon.svelte` ;
-  - `embla-carousel*` interdit hors de `features/carousel/` ;
+  - `embla-carousel*` interdit hors de `shared/ui/carousel/` ;
   - chemins relatifs à plus d'un niveau interdits.
+- `make arch-selftest` (`tools/archSelftest.ts`, lancé par `make qa`) : écrit une violation volontaire de chaque règle (domaine vers infrastructure par chemin relatif, domaine vers framework, module vers module, interface vers infrastructure dans le catalogue, socle vers module, vue et routage vers l'intérieur d'un module, types générés hors infrastructure), exige l'échec d'ESLint avec le message attendu, puis retire le fichier.
+- `no-console` désactivé dans `tools/` : ce sont des outils en ligne de commande dont la sortie est le résultat.
 - `no-undef` désactivé : recommandation de typescript-eslint, TypeScript vérifie déjà les identifiants (et la règle ne connaît pas les globaux de Svelte).
 - Désactivations ponctuelles, chacune justifiée sur place :
   - `svelte/no-at-html-tags` dans `SeoHead.svelte` : JSON-LD sérialisé, `<` échappé ;
   - `a11y_no_noninteractive_tabindex` sur la piste du carrousel : sans focus, elle ne se défile pas au clavier sans JS (règle axe `scrollable-region-focusable`) ;
   - `a11y_no_static_element_interactions` sur le panneau du menu de catégories : gestion des flèches entre liens ;
   - `state_referenced_locally` dans `ContactForm.svelte` : superforms s'initialise une fois depuis les données de la page.
-- `svelte/no-navigation-without-resolve` reste actif. Les chemins dynamiques (catalogue, config) passent par `resolveHref` (`src/core/routing`), qui concentre la conversion de type nécessaire.
+- `svelte/no-navigation-without-resolve` reste actif. Les chemins dynamiques (catalogue, config) passent par `resolveHref` (`src/lib/shared/routing`), qui concentre la conversion de type nécessaire.
 
 ## Pièges connus
 
@@ -71,4 +78,5 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 - Un `aria-label` sur un `div` sans rôle est une violation axe (`aria-prohibited-attr`) : squelettes en `role="status"`, carrousel en `role="region"`.
 - `--color-border` doit garder 3:1 sur blanc (WCAG 1.4.11) : axe ne le vérifie pas, la charte l'affiche.
 - Le mode renforcé n'applique les espacements WCAG 1.4.12 qu'au texte de `<main>` hors `nav` et `[data-ui-chrome]`. Les sélecteurs globaux déforment l'en-tête (test de non-régression dans `tests/e2e/layout.e2e.ts`).
+- **`#lib` et TypeScript** : Vite et Vitest résolvent `#lib/x` par le champ `imports` de `package.json`, mais TypeScript ne sonde ni extension ni `index` pour ce champ. Le même motif est donc déclaré dans `paths` du `tsconfig.json` (validé par Kit : il n'en génère aucun lui-même).
 - `pkill -f "node build"` tue aussi le shell qui le lance : arrêter le serveur par son PID.

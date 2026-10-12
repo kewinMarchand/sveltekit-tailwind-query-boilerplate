@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { TasksView } from '@/domains/tasks'
+  import { TasksView } from '#lib/modules/task'
 </script>
 
 <TasksView />

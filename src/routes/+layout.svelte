@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Providers } from '@/core/providers'
-  import { AppShell } from '@/core/ui/layouts'
+  import { Providers } from '#lib/shared/providers'
+  import { AppShell } from '#lib/shared/ui/layout'
 
   const { data, children } = $props()
 </script>

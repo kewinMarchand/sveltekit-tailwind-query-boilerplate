@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ContactView } from '@/domains/contact'
+  import { ContactView } from '#lib/modules/contact'
 
   const { data } = $props()
 </script>

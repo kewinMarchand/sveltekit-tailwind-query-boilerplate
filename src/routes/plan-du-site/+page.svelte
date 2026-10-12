@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SitemapView } from '@/domains/legal'
+  import { SitemapView } from '#lib/views/legal'
 
   const { data } = $props()
 </script>

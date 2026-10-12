@@ -1,4 +1,4 @@
-import { buildRobotsTxt } from '@/core/seo'
+import { buildRobotsTxt } from '#lib/shared/seo'
 
 import type { RequestHandler } from './$types'
 

@@ -1,5 +1,5 @@
-import { loadHomePage } from '@/domains/home/index.server'
+import { loadLatestArticles } from '#lib/modules/blog/index.server'
 
 import type { PageServerLoad } from './$types'
 
-export const load: PageServerLoad = (event) => loadHomePage(event)
+export const load: PageServerLoad = (event) => loadLatestArticles(event)

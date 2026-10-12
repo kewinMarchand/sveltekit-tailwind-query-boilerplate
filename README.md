@@ -21,14 +21,14 @@ S'y ajoutent : menu de catégories en cascade (desktop) et en niveaux (mobile), 
 | --------------------------------------- | ----------------------------------------------------------------------- |
 | SvelteKit 3, adapter-node               | Routage, rendu serveur, form actions, endpoints `robots.txt` et sitemap |
 | Svelte 5 (runes), TypeScript 6 (strict) | UI et typage                                                            |
-| Tailwind CSS 4                          | Styles, tokens dans `src/core/theme/theme.css`                          |
+| Tailwind CSS 4                          | Styles, tokens dans `src/lib/shared/theme/theme.css`                    |
 | bits-ui                                 | Primitives accessibles : `Button` et `Dialog` uniquement                |
 | TanStack Svelte Query 6                 | Cache et synchronisation des données côté client                        |
 | sveltekit-superforms 3 + zod 4          | Formulaires validés côté serveur et client, même schéma                 |
-| Embla Carousel 8                        | Carrousel (glisser, swipe, molette), via `features/carousel`            |
+| Embla Carousel 8                        | Carrousel (glisser, swipe, molette), via `shared/ui/carousel`           |
 | @lucide/svelte                          | Icônes, via le wrapper `Icon`                                           |
 | @fontsource-variable/inter              | Police Inter servie localement                                          |
-| ESLint 10, Prettier, Husky, lint-staged | Qualité du code, vérifiée à chaque commit                               |
+| ESLint 10, Prettier, Husky, lint-staged | Qualité du code et règles d’architecture, vérifiées à chaque commit     |
 | Vitest 5 + Testing Library              | Tests unitaires et fonctionnels                                         |
 | Playwright + axe-core                   | Tests end-to-end et accessibilité, desktop et mobile, deux modes        |
 | Lighthouse CI                           | Performance, accessibilité, SEO, bonnes pratiques                       |
@@ -67,38 +67,53 @@ Variables d'environnement (`.env`, déclarées et validées dans `src/env.ts`). 
 | -------------------------------------- | --------------------------------------------------------------------------------------------- |
 | `make up`                              | Serveur de développement (port 5173)                                                          |
 | `make build` / `make start`            | Build de production, puis le servir                                                           |
-| `make qa`                              | QA rapide : lint, format, types, tests unitaires                                              |
+| `make qa`                              | QA rapide : lint (dont architecture), auto-test des règles, format, types, tests unitaires    |
+| `make arch-selftest`                   | Écrit une violation de chaque règle d'architecture, exige l'échec d'ESLint, puis la retire    |
 | `make qa-full`                         | QA complète : QA rapide, e2e, accessibilité, Lighthouse                                       |
 | `make test-unit`                       | Vitest                                                                                        |
 | `make test-e2e`                        | Playwright, desktop et mobile (port 3120)                                                     |
 | `make test-a11y`                       | axe-core, WCAG 2.1 AA, sur chaque page, mode standard et mode renforcé                        |
 | `make metrics`                         | Lighthouse CI (port 3220) : échoue sous 90 en performance ou sous 100 en accessibilité et SEO |
-| `make api-types`                       | Génère `src/core/api/schema.d.ts` depuis `API_SCHEMA_URL`                                     |
+| `make api-types`                       | Génère `src/lib/shared/api/schema.d.ts` depuis `API_SCHEMA_URL`                               |
 | `make docker-build` / `make docker-up` | Image de production, sur le port `PORT` (3000 par défaut)                                     |
 
 ## Architecture
 
+Le front est un seul contexte borné, découpé en **modules** par sous-domaine métier, et en **couches** à l'intérieur de chaque module (vocabulaire d'Evans et de Khononov, détaillé dans le document d'architecture commun aux boilerplates).
+
 ```
 src/
-  routes/      routage uniquement : chaque route délègue à une vue de domains/
-  domains/     un dossier par domaine de page, avec sa logique métier
-    catalog/
-      api/             accès aux données (ici en mémoire, avec latence)
-      common/models/   types, schémas et fonctions pures (filtres, tri, pagination)
-      common/exceptions/
-      services/        chargement serveur (*.server.ts)
-      ui/              composants, dont la vue rendue par la route
-      ui/hooks/        état et effets en runes (*.svelte.ts)
-      index.ts         export public du domaine
-      index.server.ts  export public côté serveur (load, actions)
-  features/    briques réutilisables sans entité métier (carousel)
-  core/        socle : config, thème, SEO, routage, mode renforcé, erreurs, layouts, ui-kit
+  routes/                 routage uniquement : chaque route délègue à une vue ou à l'index d'un module
+  lib/                    alias natif #lib (subpath imports de package.json)
+    views/                pages sans métier ou qui composent des modules : home, legal, errors, styleguide
+    modules/
+      catalog/            forme complète
+        domain/           types (namespace Catalog), value objects, règles pures, sans framework
+        application/      cas d'utilisation côté serveur : chargement de page, menu, chemins du sitemap
+        infrastructure/   accès aux données (ici en mémoire, avec latence)
+        ui/               composants, hooks en runes (*.svelte.ts), vue rendue par la route
+        index.ts          seul export public côté client
+        index.server.ts   seul export public côté serveur (load, actions)
+      blog/, contact/, task/   forme réduite : domain/, infrastructure/, ui/, sans application/
+    shared/               socle sans métier : config, thème, SEO, routage, providers, erreurs,
+                          ui/ (kit, layout, carousel, a11y-mode, hooks), api/ (types générés)
 tests/
-  e2e/         un fichier par page ou par brique
-  a11y/        audit axe de chaque page, dans les deux modes
+  e2e/                    un fichier par page ou par brique
+  a11y/                   audit axe de chaque page, dans les deux modes
+tools/
+  archSelftest.ts         auto-test des règles d'architecture
 ```
 
-Le sens des dépendances est `domains/` vers `features/` vers `core/`, jamais l'inverse. Hors de son propre dossier, un domaine ne s'importe que par son `index.ts` (ou `index.server.ts` côté serveur), et une règle ESLint le vérifie.
+Règles de dépendance, vérifiées par ESLint (`@boundaries/eslint-plugin`) :
+
+- le routage importe les vues, l'index public des modules et le socle ;
+- une vue importe l'index public des modules et le socle ;
+- un module n'importe jamais un autre module, la composition se fait dans `views/` ;
+- le socle n'importe ni module, ni vue, ni routage : il reçoit les données métier en propriétés (le menu de catégories est fourni par `+layout.server.ts`) ;
+- dans un module, `domain/` n'importe que lui-même (et des types du socle), `application/` le domaine et l'infrastructure, `infrastructure/` le domaine et les types générés de l'API, `ui/` le domaine, l'application et l'interface (l'infrastructure seulement si le module n'a pas d'`application/`) ;
+- les types générés de l'API (`shared/api/`) ne sont importés que par `infrastructure/`.
+
+`make arch-selftest`, lancé par `make qa`, écrit une violation volontaire de chaque règle à son emplacement réel, exige l'échec d'ESLint, puis la retire.
 
 Le `CLAUDE.md` de ce dépôt note les choix propres au projet, les versions épinglées et les pièges connus.
 
@@ -106,27 +121,27 @@ Le `CLAUDE.md` de ce dépôt note les choix propres au projet, les versions épi
 
 ### Ajouter une page
 
-1. Créer le domaine `src/domains/<nom>/` avec sa vue `ui/<Nom>View.svelte` et son `index.ts`. La vue commence par `<PageHeader>` (titre, description, fil d'Ariane, métadonnées).
-2. Créer `src/routes/<route>/+page.svelte`, qui rend la vue. Un chargement serveur passe par `+page.server.ts` et un `index.server.ts` du domaine.
-3. Ajouter la route à `src/core/config/navigation.ts` (menu, sitemap, plan du site) et à `tests/e2e/routes.ts` (réponse, SEO, débordement, accessibilité).
+1. Page sans métier : créer `src/lib/views/<nom>/` avec sa vue `<Nom>View.svelte` et son `index.ts`. Page d'un module : la vue va dans `ui/` du module et sort par son `index.ts`. La vue commence par `<PageHeader>` (titre, description, fil d'Ariane, métadonnées).
+2. Créer `src/routes/<route>/+page.svelte`, qui rend la vue. Un chargement serveur passe par `+page.server.ts` et l'`index.server.ts` du module.
+3. Ajouter la route à `src/lib/shared/config/navigation.ts` (menu, sitemap, plan du site) et à `tests/e2e/routes.ts` (réponse, SEO, débordement, accessibilité).
 4. Écrire `tests/e2e/<route>.e2e.ts`.
 
 ### Charger des données avec TanStack Query
 
-Le pattern est dans `src/domains/tasks/` :
+Le pattern est dans `src/lib/modules/task/` :
 
-- `api/tasksRepository.ts` fournit la donnée. Pour brancher une vraie API, remplacer son contenu par un appel typé, sans toucher à l'UI.
-- `ui/hooks/useTasks.svelte.ts` encapsule `createQuery`, avec une clé de cache exportée et une erreur métier (`TasksLoadError`).
+- `infrastructure/taskRepository.ts` fournit la donnée. Pour brancher une vraie API, remplacer son contenu par un appel typé, sans toucher à l'UI.
+- `ui/hooks/useTasks.svelte.ts` encapsule `createQuery`, avec une clé de cache exportée et une erreur de chargement (`TasksLoadError`).
 - `ui/TaskList.svelte` affiche les trois états à partir de props, ce qui le rend testable sans réseau.
 
 ### Ajouter un champ de formulaire
 
-1. Ajouter le champ et son message d'erreur dans `src/domains/contact/common/models/contactSchema.ts`. Le type du formulaire en découle.
+1. Ajouter le champ et son message d'erreur dans `src/lib/modules/contact/domain/contactSchema.ts`. Le type du formulaire en découle.
 2. Ajouter le `TextField` dans `ContactForm.svelte` avec `errors={$errors.champ}` et `bind:value={$form.champ}`. Le message est relié au champ par `aria-describedby`.
 
 ### Ajouter une icône
 
-Importer l'icône depuis `@lucide/svelte/icons/<nom>` dans `src/core/ui/ui-kit/Icon.svelte` et l'ajouter à `ICONS`. Ne jamais importer `@lucide/svelte` ailleurs, ESLint le refuse.
+Importer l'icône depuis `@lucide/svelte/icons/<nom>` dans `src/lib/shared/ui/kit/Icon.svelte` et l'ajouter à `ICONS`. Ne jamais importer `@lucide/svelte` ailleurs, ESLint le refuse.
 
 ## Tests
 

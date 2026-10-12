@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CatalogView } from '@/domains/catalog'
+  import { CatalogView } from '#lib/modules/catalog'
 
   const { data } = $props()
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LegalNoticeView } from '@/domains/legal'
+  import { LegalNoticeView } from '#lib/views/legal'
 </script>
 
 <LegalNoticeView />

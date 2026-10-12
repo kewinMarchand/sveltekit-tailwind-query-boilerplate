@@ -1,5 +1,5 @@
-import { buildSitemapXml } from '@/core/seo'
-import { listCatalogPaths } from '@/domains/catalog/index.server'
+import { listCatalogPaths } from '#lib/modules/catalog/index.server'
+import { buildSitemapXml } from '#lib/shared/seo'
 
 import type { RequestHandler } from './$types'
 

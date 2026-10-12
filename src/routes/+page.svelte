@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { HomeView } from '@/domains/home'
+  import { HomeView } from '#lib/views/home'
 
   const { data } = $props()
 </script>
