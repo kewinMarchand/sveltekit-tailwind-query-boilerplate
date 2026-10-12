@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BlogCard } from '#lib/modules/blog'
-  import { ProductCard } from '#lib/modules/catalog'
+  import { eurosToCents, ProductCard } from '#lib/modules/catalog'
   import { ResponsiveImage } from '#lib/shared/ui/kit'
 
   import Section from './Section.svelte'
@@ -18,7 +18,7 @@
     slug: 'exemple',
     name: 'Carte produit',
     categorySlug: 'monstera',
-    price: 3490,
+    price: eurosToCents(34.9),
     exposure: 'mi-ombre',
     size: 'L',
     inStock: false,

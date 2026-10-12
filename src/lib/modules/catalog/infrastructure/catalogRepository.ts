@@ -1,8 +1,8 @@
 import { EXPOSURES, SIZES } from '../domain/catalog'
-import { countFacetValues, filterProducts, paginate, sortProducts } from '../domain/catalogListing'
 import { categoryHref, resolveCategoryPath } from '../domain/categoryPath'
 import { collectLeafSlugs, findCategoryChain } from '../domain/categoryTree'
-import { CATEGORY_TREE, PRODUCTS } from './catalogData'
+import { CATEGORY_TREE, PRODUCTS } from './in-memory/catalogData'
+import { countFacetValues, filterProducts, paginate, sortProducts } from './in-memory/productSearch'
 
 import type { Catalog } from '../domain/catalog'
 

@@ -1,4 +1,6 @@
-import type { Catalog } from '../domain/catalog'
+import { eurosToCents } from '#lib/modules/catalog/domain/price'
+
+import type { Catalog } from '#lib/modules/catalog/domain/catalog'
 
 const leaf = (slug: string, name: string, description: string): Catalog.Category => ({
   slug,
@@ -172,7 +174,7 @@ export const PRODUCTS: Catalog.Product[] = Object.entries(SEEDS)
     slug: slugify(seed.name),
     name: seed.name,
     categorySlug: seed.categorySlug,
-    price: Math.round(seed.euros * 100),
+    price: eurosToCents(seed.euros),
     exposure: seed.exposure,
     size: seed.size,
     inStock: seed.inStock,

@@ -1,10 +1,15 @@
-import { PAGE_SIZE } from './catalog'
+/**
+ * Simulateur de l'API : filtre, comptage disjonctif, tri et pagination appartiennent au
+ * fournisseur. Au branchement de l'API, ce dossier disparaît ou ne sert plus qu'aux tests.
+ */
+import { PAGE_SIZE } from '#lib/modules/catalog/domain/catalog'
+import { eurosToCents } from '#lib/modules/catalog/domain/price'
 
-import type { Catalog } from './catalog'
+import type { Catalog } from '#lib/modules/catalog/domain/catalog'
 
 const matchesPrice = (product: Catalog.Product, query: Catalog.Query) =>
-  (query.priceMin === undefined || product.price >= query.priceMin * 100) &&
-  (query.priceMax === undefined || product.price <= query.priceMax * 100)
+  (query.priceMin === undefined || product.price >= eurosToCents(query.priceMin)) &&
+  (query.priceMax === undefined || product.price <= eurosToCents(query.priceMax))
 
 export const filterProducts = (
   products: Catalog.Product[],
@@ -51,19 +56,4 @@ export const paginate = <T>(items: T[], page: number, pageSize = PAGE_SIZE) => {
     page,
     totalPages,
   }
-}
-
-const WINDOW_THRESHOLD = 7
-
-export const paginationWindow = (current: number, total: number): Catalog.PaginationItem[] => {
-  if (total <= WINDOW_THRESHOLD) return Array.from({ length: total }, (_, index) => index + 1)
-
-  const pages = [1, current - 1, current, current + 1, total].filter(
-    (page, index, all) => page >= 1 && page <= total && all.indexOf(page) === index,
-  )
-
-  return pages.flatMap((page, index): Catalog.PaginationItem[] => {
-    const previous = pages[index - 1]
-    return previous !== undefined && page - previous > 1 ? ['ellipsis', page] : [page]
-  })
 }

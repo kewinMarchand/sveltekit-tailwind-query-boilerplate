@@ -1,20 +1,16 @@
-import {
-  countFacetValues,
-  filterProducts,
-  paginate,
-  paginationWindow,
-  sortProducts,
-} from './catalogListing'
-import { DEFAULT_QUERY } from './catalogQuery'
+import { DEFAULT_QUERY } from '#lib/modules/catalog/domain/catalogQuery'
+import { Price } from '#lib/modules/catalog/domain/price'
 
-import type { Catalog } from './catalog'
+import { countFacetValues, filterProducts, paginate, sortProducts } from './productSearch'
+
+import type { Catalog } from '#lib/modules/catalog/domain/catalog'
 
 const product = (overrides: Partial<Catalog.Product>): Catalog.Product => ({
   id: '1',
   slug: 'a',
   name: 'A',
   categorySlug: 'monstera',
-  price: 1000,
+  price: Price.fromCents(1000),
   exposure: 'soleil',
   size: 'M',
   inStock: true,
@@ -23,10 +19,35 @@ const product = (overrides: Partial<Catalog.Product>): Catalog.Product => ({
 })
 
 const PRODUCTS = [
-  product({ id: '1', name: 'Bananier', price: 3000, exposure: 'soleil', size: 'L' }),
-  product({ id: '2', name: 'Anthurium', price: 1500, exposure: 'mi-ombre', size: 'M' }),
-  product({ id: '3', name: 'Calathea', price: 2000, exposure: 'ombre', size: 'S', inStock: false }),
-  product({ id: '4', name: 'Dracaena', price: 1000, exposure: 'mi-ombre', size: 'L' }),
+  product({
+    id: '1',
+    name: 'Bananier',
+    price: Price.fromCents(3000),
+    exposure: 'soleil',
+    size: 'L',
+  }),
+  product({
+    id: '2',
+    name: 'Anthurium',
+    price: Price.fromCents(1500),
+    exposure: 'mi-ombre',
+    size: 'M',
+  }),
+  product({
+    id: '3',
+    name: 'Calathea',
+    price: Price.fromCents(2000),
+    exposure: 'ombre',
+    size: 'S',
+    inStock: false,
+  }),
+  product({
+    id: '4',
+    name: 'Dracaena',
+    price: Price.fromCents(1000),
+    exposure: 'mi-ombre',
+    size: 'L',
+  }),
 ]
 
 describe('filterProducts', () => {
@@ -85,17 +106,5 @@ describe('paginate', () => {
   it('découpe par pages de 12', () => {
     const items = Array.from({ length: 25 }, (_, index) => index)
     expect(paginate(items, 3)).toEqual({ items: [24], page: 3, totalPages: 3 })
-  })
-})
-
-describe('paginationWindow', () => {
-  it('affiche toutes les pages jusqu’à 7', () => {
-    expect(paginationWindow(4, 7)).toEqual([1, 2, 3, 4, 5, 6, 7])
-  })
-
-  it('insère des ellipses au-delà de 7 pages', () => {
-    expect(paginationWindow(5, 10)).toEqual([1, 'ellipsis', 4, 5, 6, 'ellipsis', 10])
-    expect(paginationWindow(1, 10)).toEqual([1, 2, 'ellipsis', 10])
-    expect(paginationWindow(10, 10)).toEqual([1, 'ellipsis', 9, 10])
   })
 })

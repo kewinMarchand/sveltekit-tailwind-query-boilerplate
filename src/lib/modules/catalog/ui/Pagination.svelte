@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { paginationWindow } from '../domain/catalogListing'
   import { catalogHref } from './hooks/useCatalogNavigation.svelte'
+  import { paginationWindow } from './pagination'
 
   import type { Catalog } from '../domain/catalog'
   import type { AppPath } from '#lib/shared/routing'

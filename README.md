@@ -90,7 +90,8 @@ src/
       catalog/            forme complète
         domain/           types (namespace Catalog), value objects, règles pures, sans framework
         application/      cas d'utilisation côté serveur : chargement de page, menu, chemins du sitemap
-        infrastructure/   accès aux données (ici en mémoire, avec latence)
+        infrastructure/   accès aux données : catalogRepository.ts (signature stable au branchement de l'API)
+          in-memory/      simulateur de l'API : jeu de données, filtre, comptage disjonctif, tri, pagination
         ui/               composants, hooks en runes (*.svelte.ts), vue rendue par la route
         index.ts          seul export public côté client
         index.server.ts   seul export public côté serveur (load, actions)

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ResponsiveImage } from '#lib/shared/ui/kit'
 
-  import { formatPrice } from '../domain/formatPrice'
+  import { formatPrice } from '../domain/price'
   import { EXPOSURE_LABELS, SIZE_LABELS } from './labels'
 
   import type { Catalog } from '../domain/catalog'

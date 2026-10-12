@@ -1,3 +1,4 @@
+import type { Price } from './price'
 import type { AppPath } from '#lib/shared/routing'
 
 export const EXPOSURES = ['soleil', 'mi-ombre', 'ombre'] as const
@@ -18,7 +19,7 @@ export declare namespace Catalog {
     slug: string
     name: string
     categorySlug: string
-    price: number
+    price: Price
     exposure: Exposure
     size: Size
     inStock: boolean
@@ -76,6 +77,4 @@ export declare namespace Catalog {
   type Result = { status: 'success'; listing: Listing } | { status: 'error'; message: string }
 
   type Status = 'pending' | 'error' | 'success'
-
-  type PaginationItem = number | 'ellipsis'
 }
