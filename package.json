@@ -33,6 +33,7 @@
     "@lhci/cli": "^0.15.1",
     "@lucide/svelte": "^1.53.0",
     "@playwright/test": "^1.64.0",
+    "@sentry/sveltekit": "^11.6.0",
     "@sveltejs/adapter-node": "^6.0.0",
     "@sveltejs/kit": "^3.0.1",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",

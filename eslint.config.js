@@ -48,6 +48,11 @@ const FRAMEWORKS_IN_APPLICATION = {
     'L’application ne dépend d’aucun framework : elle renvoie une union que la route traduit.',
 }
 
+const OBSERVABILITY_WRAPPER = {
+  group: ['@sentry/*'],
+  message: 'Le SDK GlitchTip passe par le wrapper #lib/shared/observability.',
+}
+
 const sameModule = (type) => ({
   element: { type, captured: { module: '{{ from.element.captured.module }}' } },
 })
@@ -159,7 +164,7 @@ export default defineConfig(
       'simple-import-sort/exports': 'error',
       'no-restricted-imports': [
         'error',
-        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER] },
+        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, OBSERVABILITY_WRAPPER] },
       ],
     },
   },
@@ -201,7 +206,15 @@ export default defineConfig(
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, FRAMEWORKS_IN_DOMAIN] },
+        {
+          patterns: [
+            RELATIVE_DEPTH,
+            ICONS_WRAPPER,
+            CAROUSEL_WRAPPER,
+            OBSERVABILITY_WRAPPER,
+            FRAMEWORKS_IN_DOMAIN,
+          ],
+        },
       ],
     },
   },
@@ -210,13 +223,30 @@ export default defineConfig(
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, FRAMEWORKS_IN_APPLICATION] },
+        {
+          patterns: [
+            RELATIVE_DEPTH,
+            ICONS_WRAPPER,
+            CAROUSEL_WRAPPER,
+            OBSERVABILITY_WRAPPER,
+            FRAMEWORKS_IN_APPLICATION,
+          ],
+        },
       ],
     },
   },
   {
     files: ['tools/**'],
     rules: { 'no-console': 'off' },
+  },
+  {
+    files: ['src/lib/shared/observability/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER] },
+      ],
+    },
   },
   {
     files: ['src/lib/shared/ui/kit/Icon.svelte'],

@@ -23,6 +23,7 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 - **Carrousel** : Embla Carousel 8 et son adaptateur Svelte, uniquement dans `src/lib/shared/ui/carousel/` (règle ESLint). Sans JS, la piste reste en `overflow-x: auto` + `scroll-snap`.
 - **Police** : Inter variable via `@fontsource-variable/inter`, servie localement. Unité de police : `px`.
 - **Environnement** : variables déclarées et validées par zod dans `src/env.ts` (`defineEnvVars`), lues via `$app/env/public` et `$app/env/private`.
+- **Suivi des erreurs (GlitchTip)** : `@sentry/sveltekit`, section 16 de la spec commune, uniquement via `src/lib/shared/observability/` (règle ESLint). Neutre par défaut : sans `GLITCHTIP_DSN` ni `PUBLIC_GLITCHTIP_DSN`, aucun SDK n'est importé et aucune requête ne part. Serveur : SDK importé dans le hook `init` de `hooks.server.ts`, `handleError` ne remonte que les erreurs inattendues (`kind: 'unknown'`) hors en-tête `X-Scenario` (`shouldReportError`, testé). Les 404, les `error()` voulus, les 400 et 422 de validation et la maintenance 503 ne remontent pas. Navigateur : SDK chargé par import dynamique à l'inactivité après `load`, sans traçage, sans session ni rejeu. Options : `sendDefaultPii: false`, `tracesSampleRate: 0`, corps de requête jamais joints côté serveur (`httpIntegration({ maxRequestBodySize: 'none' })`, le défaut du SDK Node étant `medium`). Pas de CSP dans ce dépôt : il n'y a aucune entrée à ajouter.
 - **Langue** : français uniquement. URLs en français.
 - **API** : aucune. Les dépôts des modules (`infrastructure/`) renvoient des données en mémoire avec latence. `make api-types` génère `src/lib/shared/api/schema.d.ts` quand `API_SCHEMA_URL` est renseigné. Seule la couche `infrastructure/` des modules a le droit d'importer ces types.
 - **Cibles tactiles** : 44 px minimum (token `--spacing-touch`).
@@ -44,6 +45,7 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 
 - `@boundaries/eslint-plugin` 7.2 (dev, environ 3 Mo installés avec `@boundaries/elements`, aucun effet sur le bundle) : vérifie les règles de dépendance entre couches et modules (D6). Contrairement à `no-restricted-imports`, qui compare la chaîne d'import, il résout le chemin réel : un import relatif `../infrastructure/x` ne le contourne pas. Compatible ESLint 10 (peer `>=6`) et fichiers `.svelte`, vérifié par l'auto-test. C'est le nouveau nom de `eslint-plugin-boundaries`, que l'ancien paquet annonce comme remplaçant.
 - `eslint-import-resolver-typescript` 4.4 (dev, environ 4,7 Mo avec `unrs-resolver`) : résolveur demandé par le plugin pour suivre `#lib/*` via le `tsconfig.json`.
+- `@sentry/sveltekit` 11.6 (dev, embarqué par adapter-node) : SDK GlitchTip imposé par la spec (section 16). Côté navigateur, 27 Ko gzip (82 Ko brut) dans un chunk chargé à la demande, après l'affichage et seulement avec un DSN : rien dans le JS initial. Les drapeaux de build `__SENTRY_TRACING__` et `__SENTRY_DEBUG__` à `false` (`vite.config.ts`) et l'import dynamique déstructuré ramènent ce chunk de 143 à 27 Ko gzip. Côté serveur, environ 79 Mo dans `node_modules`, mais seuls les modules utilisés sont embarqués dans `build/`.
 - `eslint-plugin-simple-import-sort` : impose l'ordre externes, `#lib/`, relatifs, types, que le modèle Next obtenait d'`eslint-plugin-import`. Léger, compatible ESLint 10 et fichiers `.svelte`.
 - `@internationalized/date` et `@testing-library/dom` : peers, voir le tableau.
 
@@ -54,6 +56,7 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 - `no-restricted-imports` :
   - frameworks interdits dans `domain/` et `application/` (`svelte`, `$app/*`, `@sveltejs/*`, `@tanstack/*`, `bits-ui`, `sveltekit-superforms`) ;
   - `@lucide/svelte` interdit hors du wrapper `Icon.svelte` ;
+  - `@sentry/*` interdit hors de `shared/observability/`
   - `embla-carousel*` interdit hors de `shared/ui/carousel/` ;
   - chemins relatifs à plus d'un niveau interdits.
 - `make arch-selftest` (`tools/archSelftest.ts`, lancé par `make qa`) : écrit une violation volontaire de chaque règle (domaine vers infrastructure par chemin relatif, domaine vers framework, application vers framework, module vers module, interface vers infrastructure dans le catalogue, socle vers module, vue et routage vers l'intérieur d'un module, types générés hors infrastructure), exige l'échec d'ESLint avec le message attendu, puis retire le fichier.
@@ -83,4 +86,6 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 - `--color-border` doit garder 3:1 sur blanc (WCAG 1.4.11) : axe ne le vérifie pas, la charte l'affiche.
 - Le mode renforcé n'applique les espacements WCAG 1.4.12 qu'au texte de `<main>` hors `nav` et `[data-ui-chrome]`. Les sélecteurs globaux déforment l'en-tête (test de non-régression dans `tests/e2e/layout.e2e.ts`).
 - **`#lib` et TypeScript** : Vite et Vitest résolvent `#lib/x` par le champ `imports` de `package.json`, mais TypeScript ne sonde ni extension ni `index` pour ce champ. Le même motif est donc déclaré dans `paths` du `tsconfig.json` (validé par Kit : il n'en génère aucun lui-même).
+- **DSN GlitchTip** : la clé publique d'un DSN au format Sentry n'accepte que des caractères de mot. Un tiret (`cle-factice`) rend le DSN invalide et le SDK s'éteint avec « Invalid Sentry Dsn ».
+- **Tests GlitchTip** : `tests/e2e/observability.e2e.ts` démarre un faux GlitchTip local (port 3123, enregistre les enveloppes) et le build sur le port 3122 avec des DSN factices. Aucune instance réelle n'est contactée, et la suite principale tourne sans variable.
 - `pkill -f "node build"` tue aussi le shell qui le lance : arrêter le serveur par son PID.

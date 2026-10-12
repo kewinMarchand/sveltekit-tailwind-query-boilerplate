@@ -17,6 +17,7 @@ export default defineConfig(({ command }) => {
       svelteTesting(),
     ],
     server: { port: 5173, strictPort: true },
+    define: { __SENTRY_TRACING__: false, __SENTRY_DEBUG__: false },
     test: {
       environment: 'jsdom',
       globals: true,
