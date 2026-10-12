@@ -17,6 +17,9 @@
 </script>
 
 <form method="POST" novalidate class="flex max-w-form flex-col gap-4" use:enhance>
+  <p class="text-body-sm" data-testid="contact-required-hint">
+    Les champs marqués d’un astérisque (*) sont obligatoires.
+  </p>
   <TextField
     name="name"
     label="Nom"

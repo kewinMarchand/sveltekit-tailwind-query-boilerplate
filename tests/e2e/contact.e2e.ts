@@ -9,6 +9,18 @@ const fillValidForm = async (page: Page) => {
 }
 
 test.describe('Contact', () => {
+  test('signale les champs obligatoires avant la saisie', async ({ page }) => {
+    await page.goto('/contact')
+
+    await expect(page.getByTestId('contact-required-hint')).toHaveText(
+      'Les champs marqués d’un astérisque (*) sont obligatoires.',
+    )
+    for (const field of ['contact-name', 'contact-email', 'contact-message']) {
+      await expect(page.getByTestId(field)).toHaveAttribute('required', '')
+      await expect(page.getByTestId(field)).toHaveAccessibleName(/\*$/)
+    }
+  })
+
   test('affiche les erreurs de validation quand le formulaire est vide', async ({ page }) => {
     await page.goto('/contact')
     await page.getByTestId('contact-submit').click()
