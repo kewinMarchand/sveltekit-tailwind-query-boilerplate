@@ -50,6 +50,7 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 - `@sentry/sveltekit` 11.6 (dev, embarqué par adapter-node) : SDK GlitchTip imposé par la spec (section 16). Côté navigateur, 27 Ko gzip (82 Ko brut) dans un chunk chargé à la demande, après l'affichage et seulement avec un DSN : rien dans le JS initial. Les drapeaux de build `__SENTRY_TRACING__` et `__SENTRY_DEBUG__` à `false` (`vite.config.ts`) et l'import dynamique déstructuré ramènent ce chunk de 143 à 27 Ko gzip. Côté serveur, environ 79 Mo dans `node_modules`, mais seuls les modules utilisés sont embarqués dans `build/`.
 - `@iconify-json/lucide` 1.2 (dev, 640 Ko installés, aucun effet sur le bundle) : les tracés Lucide (licence ISC) au format Iconify, lus par `tools/icons.ts`. Remplace `@lucide/svelte`, retiré.
 - `svgstore` 3.0 (dev, environ 2,3 Mo installés avec `cheerio` et ses dépendances, aucun effet sur le bundle) : assemble le sprite, un `<symbol>` par icône avec son `viewBox`.
+- `openapi-fetch` 0.17 (dev, embarqué par adapter-node et dans le chunk des tâches : 17 Ko non minifié, 4,4 Ko gzip avant minification, dépendance `openapi-typescript-helpers` en types seuls) : client typé par les `paths` générés, sans code généré. Seul `shared/api/client.ts` l'importe (règle ESLint).
 - `eslint-plugin-simple-import-sort` : impose l'ordre externes, `#lib/`, relatifs, types, que le modèle Next obtenait d'`eslint-plugin-import`. Léger, compatible ESLint 10 et fichiers `.svelte`.
 - `@internationalized/date` et `@testing-library/dom` : peers, voir le tableau.
 
@@ -62,6 +63,7 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
   - `@iconify-json/*` et `svgstore` interdits hors de `tools/icons.ts` ;
   - `@sentry/*` interdit hors de `shared/observability/`
   - `embla-carousel*` interdit hors de `shared/ui/carousel/` ;
+  - `openapi-fetch` interdit hors de `shared/api/` ;
   - chemins relatifs à plus d'un niveau interdits.
 - `make arch-selftest` (`tools/archSelftest.ts`, lancé par `make qa`) : écrit une violation volontaire de chaque règle (domaine vers infrastructure par chemin relatif, domaine vers framework, application vers framework, module vers module, interface vers infrastructure dans le catalogue, socle vers module, vue et routage vers l'intérieur d'un module, types générés hors infrastructure), exige l'échec d'ESLint avec le message attendu, puis retire le fichier.
 - `no-console` désactivé dans `tools/` : ce sont des outils en ligne de commande dont la sortie est le résultat.

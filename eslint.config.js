@@ -24,6 +24,10 @@ const ICONS_WRAPPER = {
   message:
     'Les icônes passent par le sprite : nom dans icons.json, make icons, puis #lib/shared/ui/kit/Icon.',
 }
+const API_CLIENT_WRAPPER = {
+  group: ['openapi-fetch'],
+  message: 'L’API passe par le client typé #lib/shared/api/client.',
+}
 const CAROUSEL_WRAPPER = {
   group: ['embla-carousel', 'embla-carousel-*'],
   message: 'Embla passe par le wrapper #lib/shared/ui/carousel.',
@@ -165,7 +169,15 @@ export default defineConfig(
       'simple-import-sort/exports': 'error',
       'no-restricted-imports': [
         'error',
-        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, OBSERVABILITY_WRAPPER] },
+        {
+          patterns: [
+            RELATIVE_DEPTH,
+            ICONS_WRAPPER,
+            CAROUSEL_WRAPPER,
+            API_CLIENT_WRAPPER,
+            OBSERVABILITY_WRAPPER,
+          ],
+        },
       ],
     },
   },
@@ -212,6 +224,7 @@ export default defineConfig(
             RELATIVE_DEPTH,
             ICONS_WRAPPER,
             CAROUSEL_WRAPPER,
+            API_CLIENT_WRAPPER,
             OBSERVABILITY_WRAPPER,
             FRAMEWORKS_IN_DOMAIN,
           ],
@@ -229,6 +242,7 @@ export default defineConfig(
             RELATIVE_DEPTH,
             ICONS_WRAPPER,
             CAROUSEL_WRAPPER,
+            API_CLIENT_WRAPPER,
             OBSERVABILITY_WRAPPER,
             FRAMEWORKS_IN_APPLICATION,
           ],
@@ -245,16 +259,35 @@ export default defineConfig(
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER] },
+        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, API_CLIENT_WRAPPER] },
       ],
     },
   },
   {
     files: ['tools/icons.ts'],
-    rules: { 'no-restricted-imports': ['error', { patterns: [RELATIVE_DEPTH, CAROUSEL_WRAPPER] }] },
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [RELATIVE_DEPTH, CAROUSEL_WRAPPER, API_CLIENT_WRAPPER] },
+      ],
+    },
+  },
+  {
+    files: ['src/lib/shared/api/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, OBSERVABILITY_WRAPPER] },
+      ],
+    },
   },
   {
     files: ['src/lib/shared/ui/carousel/**'],
-    rules: { 'no-restricted-imports': ['error', { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER] }] },
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, API_CLIENT_WRAPPER] },
+      ],
+    },
   },
 )

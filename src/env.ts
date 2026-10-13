@@ -12,6 +12,15 @@ const optionalText = z
   .transform((value) => value || undefined)
 
 export const variables = defineEnvVars({
+  API_URL: {
+    public: true,
+    schema: z
+      .union([z.literal(''), z.url()])
+      .optional()
+      .transform((value) => value || 'http://localhost:8090'),
+    description:
+      'Origine de l’API (8090 API Platform par défaut, 8091 Hono), lue par le serveur et le navigateur',
+  },
   PUBLIC_SITE_URL: {
     public: true,
     schema: z.url().default('http://localhost:5173'),

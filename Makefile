@@ -19,13 +19,13 @@ install: ## Construit l'image de dev (Node, Chromium) et installe les dépendanc
 	$(RUN) yarn install --frozen-lockfile
 
 up: ## Lance le serveur de développement en conteneur (http://localhost:5173)
-	docker compose run --rm --service-ports node yarn dev --host 0.0.0.0
+	$(RUN) yarn dev --host 0.0.0.0
 
 build: ## Build de production
 	$(RUN) yarn build
 
 start: ## Sert le build de production (port 3000)
-	docker compose run --rm -p 3000:3000 node yarn start
+	$(RUN) yarn start
 
 icons: ## Génère static/icons.svg et le type des noms depuis icons.json (noms Lucide)
 	$(RUN) node tools/icons.ts
