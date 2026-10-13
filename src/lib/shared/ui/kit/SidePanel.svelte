@@ -37,7 +37,7 @@
   <Dialog.Portal>
     <Dialog.Overlay class="side-panel-overlay" />
     <Dialog.Content class={['side-panel', `side-panel-${side}`]} data-testid={panelTestId}>
-      <div class="flex items-center justify-between gap-2 border-b border-skeleton p-4">
+      <div class="flex items-center justify-between gap-2 border-b border-border-subtle p-4">
         <Dialog.Title class="text-title font-semibold">{title}</Dialog.Title>
         <Dialog.Close class="btn btn-inherit" aria-label="Fermer">
           <Icon name="x" />

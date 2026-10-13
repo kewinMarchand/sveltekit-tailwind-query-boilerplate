@@ -10,7 +10,7 @@
 <Section id="typographie" title="Typographie">
   <ul class="flex flex-col gap-4">
     {#each TYPE_SAMPLES as sample, index (sample.label)}
-      <li class="flex flex-col gap-1 border-b border-skeleton pb-3">
+      <li class="flex flex-col gap-1 border-b border-border-subtle pb-3">
         <svelte:element
           this={sample.tag === 'p' ? 'p' : 'div'}
           class={sample.className}

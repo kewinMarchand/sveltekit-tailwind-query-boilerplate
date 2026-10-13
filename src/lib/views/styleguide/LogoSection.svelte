@@ -6,7 +6,7 @@
 
 <Section id="logo" title="Logo">
   <div class="grid gap-4 sm:grid-cols-2">
-    <div class="flex items-center gap-4 rounded-md border border-skeleton bg-surface p-6">
+    <div class="flex items-center gap-4 rounded-md border border-border-subtle bg-surface p-6">
       <img src="/logo-mark.svg" alt="" width="64" height="64" />
       <span class="logo-link text-text">{SITE.name}</span>
     </div>

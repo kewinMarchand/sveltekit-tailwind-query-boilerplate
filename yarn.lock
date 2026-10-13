@@ -441,6 +441,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@kewinmarchand/boilerplates-ui@github:kewinMarchand/boilerplates-ui#v0.1.0":
+  version "0.1.0"
+  resolved "https://codeload.github.com/kewinMarchand/boilerplates-ui/tar.gz/41eef86c4050ec6900a90e842f8c1f17262f5e86"
+
 "@keyv/bigmap@^1.3.1":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@keyv/bigmap/-/bigmap-1.3.1.tgz#fc82fa83947e7ff68c6798d08907db842771ef2c"

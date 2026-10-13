@@ -12,7 +12,7 @@ export interface TokenSample {
 }
 
 const readToken = (name: string) =>
-  getComputedStyle(document.documentElement).getPropertyValue(`--color-${name}`).trim()
+  getComputedStyle(document.documentElement).getPropertyValue(`--bui-color-${name}`).trim()
 
 export const useColorTokens = (names: readonly string[]) => {
   let samples = $state<TokenSample[]>(

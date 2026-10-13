@@ -17,21 +17,22 @@ S'y ajoutent : menu de catégories en cascade (desktop) et en niveaux (mobile), 
 
 ## Stack
 
-| Brique                                  | Rôle                                                                    |
-| --------------------------------------- | ----------------------------------------------------------------------- |
-| SvelteKit 3, adapter-node               | Routage, rendu serveur, form actions, endpoints `robots.txt` et sitemap |
-| Svelte 5 (runes), TypeScript 6 (strict) | UI et typage                                                            |
-| Tailwind CSS 4                          | Styles, tokens dans `src/lib/shared/theme/theme.css`                    |
-| bits-ui                                 | Primitives accessibles : `Button` et `Dialog` uniquement                |
-| TanStack Svelte Query 6                 | Cache et synchronisation des données côté client                        |
-| sveltekit-superforms 3 + zod 4          | Formulaires validés côté serveur et client, même schéma                 |
-| Embla Carousel 8                        | Carrousel (glisser, swipe, molette), via `shared/ui/carousel`           |
-| Lucide (sprite SVG)                     | Icônes : `static/icons.svg` généré par `make icons`, composant `Icon`   |
-| @fontsource-variable/inter              | Police Inter servie localement                                          |
-| ESLint 10, Prettier, Husky, lint-staged | Qualité du code et règles d’architecture, vérifiées à chaque commit     |
-| Vitest 5 + Testing Library              | Tests unitaires et fonctionnels                                         |
-| Playwright + axe-core                   | Tests end-to-end et accessibilité, desktop et mobile, deux modes        |
-| Lighthouse CI                           | Performance, accessibilité, SEO, bonnes pratiques                       |
+| Brique                                  | Rôle                                                                         |
+| --------------------------------------- | ---------------------------------------------------------------------------- |
+| SvelteKit 3, adapter-node               | Routage, rendu serveur, form actions, endpoints `robots.txt` et sitemap      |
+| Svelte 5 (runes), TypeScript 6 (strict) | UI et typage                                                                 |
+| Tailwind CSS 4                          | Styles, sur les tokens de boilerplates-ui (`src/lib/shared/theme/theme.css`) |
+| boilerplates-ui                         | Tokens, CSS des composants et comportement natif communs aux boilerplates    |
+| bits-ui                                 | Primitives accessibles : `Button` et `Dialog` uniquement                     |
+| TanStack Svelte Query 6                 | Cache et synchronisation des données côté client                             |
+| sveltekit-superforms 3 + zod 4          | Formulaires validés côté serveur et client, même schéma                      |
+| Embla Carousel 8                        | Carrousel (glisser, swipe, molette), via `shared/ui/carousel`                |
+| Lucide (sprite SVG)                     | Icônes : `static/icons.svg` généré par `make icons`, composant `Icon`        |
+| @fontsource-variable/inter              | Police Inter servie localement                                               |
+| ESLint 10, Prettier, Husky, lint-staged | Qualité du code et règles d’architecture, vérifiées à chaque commit          |
+| Vitest 5 + Testing Library              | Tests unitaires et fonctionnels                                              |
+| Playwright + axe-core                   | Tests end-to-end et accessibilité, desktop et mobile, deux modes             |
+| Lighthouse CI                           | Performance, accessibilité, SEO, bonnes pratiques                            |
 
 ## Prérequis
 
