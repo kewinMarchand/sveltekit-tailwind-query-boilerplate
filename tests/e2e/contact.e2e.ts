@@ -39,6 +39,18 @@ test.describe('Contact', () => {
     await expect(page.getByTestId('contact-success')).toBeVisible()
     await expect(page.getByTestId('contact-name')).toHaveValue('')
   })
+
+  test('affiche sous le champ la violation 422 renvoyée par l’API', async ({ page }) => {
+    await page.goto('/contact')
+    await fillValidForm(page)
+    await page.getByTestId('contact-name').fill('A'.repeat(256))
+    await page.getByTestId('contact-submit').click()
+
+    const name = page.getByTestId('contact-name')
+    await expect(name).toHaveAttribute('aria-invalid', 'true')
+    await expect(name).toHaveAccessibleDescription('Votre nom ne doit pas dépasser 255 caractères.')
+    await expect(page.getByTestId('contact-success')).toHaveCount(0)
+  })
 })
 
 test.describe('Contact sans JavaScript', () => {

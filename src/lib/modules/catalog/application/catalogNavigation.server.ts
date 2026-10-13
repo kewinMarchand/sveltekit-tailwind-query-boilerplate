@@ -1,6 +1,13 @@
 import { listCategoryPaths, toCategoryMenu } from '../domain/categoryPath'
 import { findCategoryTree } from '../infrastructure/catalogRepository'
 
-export const getCategoryMenu = () => toCategoryMenu(findCategoryTree())
+/** Menu des catégories. API indisponible : menu vide, la page reste servie. */
+export const getCategoryMenu = async () => {
+  try {
+    return toCategoryMenu(await findCategoryTree())
+  } catch {
+    return toCategoryMenu([])
+  }
+}
 
-export const listCatalogPaths = () => listCategoryPaths(findCategoryTree())
+export const listCatalogPaths = async () => listCategoryPaths(await findCategoryTree())

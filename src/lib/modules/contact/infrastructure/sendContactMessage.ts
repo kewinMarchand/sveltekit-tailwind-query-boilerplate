@@ -1,6 +1,21 @@
+import { ApiError } from '#lib/shared/api/client'
+import { serverApiClient } from '#lib/shared/api/client.server'
+
+import { toFieldErrors } from './http/contactTranslation'
+
 import type { Contact } from '../domain/contactSchema'
+import type { FieldError } from './http/contactTranslation'
 
-const LATENCY_MS = 300
+export type ContactSendResult =
+  { status: 'sent' } | { status: 'invalid'; fieldErrors: FieldError[] }
 
-export const sendContactMessage = (values: Contact.FormValues): Promise<Contact.FormValues> =>
-  new Promise((resolve) => setTimeout(() => resolve(values), LATENCY_MS))
+export const sendContactMessage = async (
+  values: Contact.FormValues,
+): Promise<ContactSendResult> => {
+  const { error, response } = await serverApiClient().POST('/api/contact_messages', {
+    body: values,
+  })
+  if (response.status === 422) return { status: 'invalid', fieldErrors: toFieldErrors(error) }
+  if (!response.ok) throw new ApiError(response)
+  return { status: 'sent' }
+}

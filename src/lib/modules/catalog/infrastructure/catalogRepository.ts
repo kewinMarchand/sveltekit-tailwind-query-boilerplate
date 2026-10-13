@@ -1,56 +1,33 @@
-import { EXPOSURES, SIZES } from '../domain/catalog'
-import { categoryHref, resolveCategoryPath } from '../domain/categoryPath'
-import { collectLeafSlugs, findCategoryChain } from '../domain/categoryTree'
-import { CATEGORY_TREE, PRODUCTS } from './in-memory/catalogData'
-import { countFacetValues, filterProducts, paginate, sortProducts } from './in-memory/productSearch'
+import { ApiError } from '#lib/shared/api/client'
+import { serverApiClient } from '#lib/shared/api/client.server'
+
+import { resolveCategoryPath } from '../domain/categoryPath'
+import { findCategoryChain } from '../domain/categoryTree'
+import { toCategory, toListing, toProductsQuery } from './http/catalogTranslation'
 
 import type { Catalog } from '../domain/catalog'
 
-const LATENCY_MS = 300
-
-const ROOT_DESCRIPTION =
-  'Catalogue de notre jardinerie tropicale : plantes d’intérieur, d’extérieur et aquatiques, filtrables par exposition, taille et prix.'
-
-const delay = <T>(value: T) =>
-  new Promise<T>((resolve) => setTimeout(() => resolve(value), LATENCY_MS))
-
-const productsOf = (categories: Catalog.Category[]) => {
-  const leaves = new Set(categories.flatMap((category) => collectLeafSlugs(category)))
-  return PRODUCTS.filter((product) => leaves.has(product.categorySlug))
+export const findCategoryTree = async (): Promise<Catalog.Category[]> => {
+  const { data, response } = await serverApiClient().GET('/api/categories')
+  if (!data) throw new ApiError(response)
+  return data.map(toCategory)
 }
 
-export const findCategoryTree = (): Catalog.Category[] => CATEGORY_TREE
-
-export const findCatalogListing = (
+/** Page du catalogue, ou null si le chemin de catégories n'existe pas dans l'arbre. */
+export const findCatalogListing = async (
   slugs: string[],
   query: Catalog.Query,
 ): Promise<Catalog.Listing | null> => {
-  const path = resolveCategoryPath(CATEGORY_TREE, slugs)
-  const chain = findCategoryChain(CATEGORY_TREE, slugs)
-  if (!path || !chain) return delay(null)
+  const tree = await findCategoryTree()
+  const chain = resolveCategoryPath(tree, slugs)
+  const categories = findCategoryChain(tree, slugs)
+  if (!chain || !categories) return null
 
-  const current = chain.at(-1)
-  const children = current ? current.children : CATEGORY_TREE
-  const branch = productsOf(current ? [current] : CATEGORY_TREE)
-  const filtered = sortProducts(filterProducts(branch, query), query.sort)
-  const { items, page, totalPages } = paginate(filtered, query.page)
-
-  return delay({
-    chain: path,
-    description: current?.description ?? ROOT_DESCRIPTION,
-    children: children.map((child) => ({
-      slug: child.slug,
-      name: child.name,
-      path: categoryHref([...slugs, child.slug]),
-      count: filterProducts(productsOf([child]), query).length,
-    })),
-    products: items,
-    total: filtered.length,
-    page,
-    totalPages,
-    facets: {
-      exposure: countFacetValues(branch, query, 'exposure', EXPOSURES),
-      size: countFacetValues(branch, query, 'size', SIZES),
-    },
+  const { data, response } = await serverApiClient().GET('/api/products', {
+    params: { query: toProductsQuery(slugs, query) },
   })
+  if (!data) throw new ApiError(response)
+
+  const current = categories.at(-1)
+  return toListing(data, { chain, slugs, ...(current && { current }) })
 }

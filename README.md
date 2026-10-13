@@ -51,6 +51,8 @@ make install   # image de dev (Node, Chromium) et dépendances
 make up        # http://localhost:5173, rechargement à chaud
 ```
 
+Le site lit ses données dans une API de test lancée à côté : [api-platform-test-api](https://github.com/kewinMarchand/api-platform-test-api) sur le port 8090 (défaut) ou [hono-mongo-test-api](https://github.com/kewinMarchand/hono-mongo-test-api) sur le port 8091, au même contrat. `API_URL` choisit l'une ou l'autre. Les tests e2e ont besoin de l'API lancée.
+
 Variables d'environnement (`.env`, déclarées et validées dans `src/env.ts`). Le `Makefile` charge `.env` et l'exporte vers chaque commande, `make start` le relit aussi :
 
 | Variable                                     | Rôle                                                                                                                                                   |
@@ -174,14 +176,14 @@ src/
       catalog/            forme complète
         domain/           types (namespace Catalog), value objects, règles pures, sans framework
         application/      cas d'utilisation côté serveur : chargement de page, menu, chemins du sitemap
-        infrastructure/   accès aux données : catalogRepository.ts (signature stable au branchement de l'API)
-          in-memory/      simulateur de l'API : jeu de données, filtre, comptage disjonctif, tri, pagination
+        infrastructure/   accès aux données : catalogRepository.ts appelle l'API
+          http/           traduction entre le contrat de l'API et le domaine (seule à importer les types générés)
         ui/               composants, hooks en runes (*.svelte.ts), vue rendue par la route
         index.ts          seul export public côté client
         index.server.ts   seul export public côté serveur (load, actions)
       blog/, contact/, task/   forme réduite : domain/, infrastructure/, ui/, sans application/
     shared/               socle sans métier : config, thème, SEO, routage, providers, erreurs,
-                          ui/ (kit, layout, carousel, a11y-mode, hooks), api/ (types générés)
+                          ui/ (kit, layout, carousel, a11y-mode, hooks), api/ (client typé, types générés)
 tests/
   e2e/                    un fichier par page ou par brique
   a11y/                   audit axe de chaque page, dans les deux modes
@@ -215,7 +217,7 @@ Le `CLAUDE.md` de ce dépôt note les choix propres au projet, les versions épi
 
 Le pattern est dans `src/lib/modules/task/` :
 
-- `infrastructure/taskRepository.ts` fournit la donnée. Pour brancher une vraie API, remplacer son contenu par un appel typé, sans toucher à l'UI.
+- `infrastructure/taskRepository.ts` appelle `GET /api/tasks` depuis le navigateur avec le client typé, `infrastructure/http/taskTranslation.ts` traduit la réponse en `Task.Entity`.
 - `ui/hooks/useTasks.svelte.ts` encapsule `createQuery`, avec une clé de cache exportée et une erreur de chargement (`TasksLoadError`).
 - `ui/TaskList.svelte` affiche les trois états à partir de props, ce qui le rend testable sans réseau.
 

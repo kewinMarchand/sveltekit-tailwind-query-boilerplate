@@ -1,4 +1,4 @@
-import { fail, message, superValidate } from 'sveltekit-superforms'
+import { fail, message, setError, superValidate } from 'sveltekit-superforms'
 import { zod4 } from 'sveltekit-superforms/adapters'
 
 import { contactSchema } from '../domain/contactSchema'
@@ -25,10 +25,16 @@ export const contactActions = {
       return fail(400, { form })
     }
 
+    let result
     try {
-      await sendContactMessage(form.data)
+      result = await sendContactMessage(form.data)
     } catch {
       return message(form, { status: 'error' }, { status: 500 })
+    }
+
+    if (result.status === 'invalid') {
+      for (const { field, message: error } of result.fieldErrors) setError(form, field, error)
+      return fail(422, { form })
     }
 
     form.data = EMPTY_VALUES

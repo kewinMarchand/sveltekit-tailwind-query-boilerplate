@@ -1,31 +1,51 @@
 import { findCatalogListing } from '../infrastructure/catalogRepository'
 import { loadCatalogPage } from './catalogPage.server'
 
-import type * as CatalogRepository from '../infrastructure/catalogRepository'
+import type { Catalog } from '../domain/catalog'
 
-vi.mock('../infrastructure/catalogRepository', async (importOriginal) => {
-  const original = await importOriginal<typeof CatalogRepository>()
-  return { ...original, findCatalogListing: vi.fn(original.findCatalogListing) }
-})
+vi.mock('../infrastructure/catalogRepository', () => ({ findCatalogListing: vi.fn() }))
 
 const params = (search = '') => new URLSearchParams(search)
 
-describe('loadCatalogPage', () => {
-  it('renvoie la page d’une catégorie connue', async () => {
-    const page = await loadCatalogPage('plantes-interieur/feuillages', params('tri=nom'))
+const LISTING: Catalog.Listing = {
+  chain: [
+    {
+      slug: 'plantes-interieur',
+      name: 'Plantes d’intérieur',
+      path: '/catalogue/plantes-interieur',
+    },
+  ],
+  description: 'Plantes tropicales d’intérieur.',
+  children: [],
+  products: [],
+  total: 0,
+  page: 1,
+  totalPages: 1,
+  facets: { exposure: [], size: [] },
+}
 
-    expect(page.status).toBe('ok')
-    if (page.status !== 'ok' || page.result.status !== 'success') throw new Error('page attendue')
-    expect(page.query.sort).toBe('nom')
-    expect(page.result.listing.chain.map((link) => link.slug)).toEqual([
-      'plantes-interieur',
-      'feuillages',
-    ])
+describe('loadCatalogPage', () => {
+  it('renvoie la page d’une catégorie connue, avec l’état de recherche lu dans l’URL', async () => {
+    vi.mocked(findCatalogListing).mockResolvedValueOnce(LISTING)
+
+    const page = await loadCatalogPage('plantes-interieur', params('tri=nom'))
+
+    expect(findCatalogListing).toHaveBeenCalledWith(
+      ['plantes-interieur'],
+      expect.objectContaining({ sort: 'nom' }),
+    )
+    expect(page).toEqual({
+      status: 'ok',
+      query: expect.objectContaining({ sort: 'nom' }),
+      result: { status: 'success', listing: LISTING },
+    })
   })
 
-  it('déclare introuvables une catégorie inconnue, un chemin trop profond et une page hors bornes', async () => {
+  it('déclare introuvables une catégorie inconnue et une page hors bornes', async () => {
+    vi.mocked(findCatalogListing).mockResolvedValueOnce(null)
     expect(await loadCatalogPage('inconnue', params())).toEqual({ status: 'not-found' })
-    expect(await loadCatalogPage('a/b/c/d', params())).toEqual({ status: 'not-found' })
+
+    vi.mocked(findCatalogListing).mockResolvedValueOnce(LISTING)
     expect(await loadCatalogPage(undefined, params('page=9'))).toEqual({ status: 'not-found' })
   })
 
