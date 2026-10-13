@@ -1,30 +1,40 @@
 .DEFAULT_GOAL := help
 -include .env
 export
+
+UID := $(shell id -u)
+GID := $(shell id -g)
+PLAYWRIGHT_VERSION := $(shell sed -n 's/.*"@playwright\/test": "\([0-9.]*\)".*/\1/p' package.json)
+export UID GID PLAYWRIGHT_VERSION
+RUN := docker compose run --rm node
+
 include Makefile.qa.mk
 
 help: ## Affiche cette aide
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
-install: ## Installe les dépendances et le navigateur des tests e2e
-	yarn install --frozen-lockfile
-	npx playwright install chromium
+install: ## Construit l'image de dev (Node, Chromium) et installe les dépendances dans son volume
+	docker compose build node
+	$(RUN) yarn install --frozen-lockfile
 
-up: ## Lance le serveur de développement (http://localhost:5173)
-	yarn dev
+up: ## Lance le serveur de développement en conteneur (http://localhost:5173)
+	docker compose run --rm --service-ports node yarn dev --host 0.0.0.0
 
 build: ## Build de production
-	yarn build
+	$(RUN) yarn build
 
-start: ## Sert le build de production
-	yarn start
+start: ## Sert le build de production (port 3000)
+	docker compose run --rm -p 3000:3000 node yarn start
 
 icons: ## Génère static/icons.svg et le type des noms depuis icons.json (noms Lucide)
-	node tools/icons.ts
+	$(RUN) node tools/icons.ts
 
 api-types: ## Génère les types TypeScript depuis le schéma OpenAPI (API_SCHEMA_URL)
-	yarn api:types
+	$(RUN) yarn api:types
+
+lint-staged: ## Vérifie les fichiers indexés (appelé par le hook pre-commit)
+	$(RUN) yarn lint-staged
 
 docker-build: ## Construit l'image Docker de production
 	docker compose build
@@ -32,7 +42,7 @@ docker-build: ## Construit l'image Docker de production
 docker-up: ## Lance l'image de production (port PORT, 3000 par défaut)
 	docker compose up
 
-docker-down: ## Arrête le conteneur
-	docker compose down
+docker-down: ## Arrête les conteneurs
+	docker compose --profile dev down --remove-orphans
 
-.PHONY: help install up build start icons api-types docker-build docker-up docker-down
+.PHONY: help install up build start icons api-types docker-build docker-up docker-down lint-staged

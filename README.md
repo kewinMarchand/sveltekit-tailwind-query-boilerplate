@@ -35,9 +35,11 @@ S'y ajoutent : menu de catégories en cascade (desktop) et en niveaux (mobile), 
 
 ## Prérequis
 
-- Node.js 24.14 ou plus (`.nvmrc`)
-- Yarn 1
-- Docker, pour l'image de production (optionnel)
+- Docker avec Compose
+- `make`
+- git
+
+Rien d'autre : ni Node, ni Yarn, ni navigateur sur la machine. Chaque commande `make` lance `docker compose run` sur le service `node` (image officielle Playwright, à la version exacte de `@playwright/test`). Les dépendances vivent dans le volume nommé `node_modules`, et le conteneur tourne avec l'UID et le GID de la machine : les fichiers générés ne sont pas à root.
 
 ## Démarrage
 
@@ -45,8 +47,8 @@ S'y ajoutent : menu de catégories en cascade (desktop) et en niveaux (mobile), 
 git clone https://github.com/kewinMarchand/sveltekit-tailwind-query-boilerplate.git
 cd sveltekit-tailwind-query-boilerplate
 cp .env.example .env
-make install   # dépendances + navigateur Chromium des tests e2e
-make up        # http://localhost:5173
+make install   # image de dev (Node, Chromium) et dépendances
+make up        # http://localhost:5173, rechargement à chaud
 ```
 
 Variables d'environnement (`.env`, déclarées et validées dans `src/env.ts`). Le `Makefile` charge `.env` et l'exporte vers chaque commande, `make start` le relit aussi :
@@ -155,6 +157,7 @@ Les règles de dépendance n'ont rien à changer : `eslint.config.js` lit la lis
 | `make test-a11y`                       | axe-core, WCAG 2.1 AA, sur chaque page, mode standard et mode renforcé                                      |
 | `make metrics`                         | Lighthouse CI (port 3220) : échoue sous 90 en performance ou sous 100 en accessibilité et SEO               |
 | `make api-types`                       | Génère `src/lib/shared/api/schema.d.ts` depuis `API_SCHEMA_URL`                                             |
+| `make docker-down`                     | Arrête les conteneurs, dont ceux de dev                                                                     |
 | `make docker-build` / `make docker-up` | Image de production, sur le port `PORT` (3000 par défaut)                                                   |
 
 ## Architecture

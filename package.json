@@ -32,7 +32,7 @@
     "@iconify-json/lucide": "^1.2.143",
     "@internationalized/date": "^3.12.4",
     "@lhci/cli": "^0.15.1",
-    "@playwright/test": "^1.64.0",
+    "@playwright/test": "1.64.0",
     "@sentry/sveltekit": "^11.6.0",
     "@sveltejs/adapter-node": "^6.0.0",
     "@sveltejs/kit": "^3.0.1",
