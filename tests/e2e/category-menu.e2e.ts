@@ -15,7 +15,7 @@ test.describe('Menu de catégories (desktop)', () => {
     const menu = page.getByTestId('layout-category-menu')
     await expect(menu).toBeVisible()
 
-    const parent = menu.getByRole('link', { name: 'Plantes d’intérieur' })
+    const parent = menu.getByRole('link', { name: "Plantes d'intérieur" })
     await parent.hover()
     await expect(parent).toHaveAttribute('aria-expanded', 'true')
     await expect(menu.getByRole('link', { name: 'Feuillages' })).toBeVisible()
@@ -34,7 +34,7 @@ test.describe('Menu de catégories (desktop)', () => {
     await page.getByTestId('layout-category-menu-toggle').click()
     const menu = page.getByTestId('layout-category-menu')
 
-    await menu.getByRole('link', { name: 'Plantes d’extérieur' }).hover()
+    await menu.getByRole('link', { name: "Plantes d'extérieur" }).hover()
     await menu.getByRole('link', { name: 'Palmiers' }).click()
 
     await expect(page).toHaveURL(/\/catalogue\/plantes-exterieur\/palmiers$/)
@@ -54,7 +54,7 @@ test.describe('Menu de catégories (desktop)', () => {
       const toggle = page.getByTestId('layout-category-menu-toggle')
       await toggle.click()
       const menu = page.getByTestId('layout-category-menu')
-      await menu.getByRole('link', { name: 'Plantes d’intérieur' }).hover()
+      await menu.getByRole('link', { name: "Plantes d'intérieur" }).hover()
       await menu.getByRole('link', { name: 'Feuillages' }).hover()
 
       const button = await toggle.boundingBox()
@@ -90,8 +90,8 @@ test.describe('Menu mobile', () => {
     await menu.getByRole('button', { name: 'Catalogue' }).click()
     await expect(menu.getByRole('heading', { name: 'Catalogue' })).toBeFocused()
 
-    await menu.getByRole('button', { name: 'Plantes d’intérieur' }).click()
-    await expect(menu.getByRole('heading', { name: 'Plantes d’intérieur' })).toBeFocused()
+    await menu.getByRole('button', { name: "Plantes d'intérieur" }).click()
+    await expect(menu.getByRole('heading', { name: "Plantes d'intérieur" })).toBeFocused()
     await expect(page.getByTestId('layout-mobile-menu-back')).toHaveText(/Retour à Catalogue/)
 
     await page.getByTestId('layout-mobile-menu-back').click()
