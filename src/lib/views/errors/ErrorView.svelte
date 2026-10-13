@@ -26,14 +26,9 @@
 <p class="lead">{description}</p>
 <div class="flex flex-wrap gap-4">
   {#if !isNotFound}
-    <a
-      href={resolveHref(toAppPath(pathname))}
-      class="btn btn-primary"
-      data-sveltekit-reload
-      data-testid="error-retry"
-    >
+    <Button href={resolveHref(toAppPath(pathname))} data-sveltekit-reload data-testid="error-retry">
       Réessayer
-    </a>
+    </Button>
   {/if}
   <Button
     href={resolve('/')}

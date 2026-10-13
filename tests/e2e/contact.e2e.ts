@@ -13,11 +13,11 @@ test.describe('Contact', () => {
     await page.goto('/contact')
 
     await expect(page.getByTestId('contact-required-hint')).toHaveText(
-      'Les champs marqués d’un astérisque (*) sont obligatoires.',
+      'Tous les champs sont obligatoires.',
     )
     for (const field of ['contact-name', 'contact-email', 'contact-message']) {
       await expect(page.getByTestId(field)).toHaveAttribute('required', '')
-      await expect(page.getByTestId(field)).toHaveAccessibleName(/\*$/)
+      await expect(page.getByTestId(field)).toHaveAccessibleName(/\(obligatoire\)$/)
     }
   })
 

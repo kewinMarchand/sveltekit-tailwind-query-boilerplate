@@ -4,27 +4,33 @@
   import type { IconName } from './iconNames'
   import type { Snippet } from 'svelte'
 
-  type Severity = 'error' | 'warning' | 'success' | 'info'
+  type Variant = 'info' | 'success' | 'warning' | 'error'
 
   interface Props {
-    severity: Severity
+    variant?: Variant
+    title?: string
+    role?: 'alert' | 'status'
     children: Snippet
-    action?: Snippet
     'data-testid'?: string
   }
 
-  const SEVERITY_ICONS: Record<Severity, IconName> = {
-    error: 'circle-alert',
-    warning: 'triangle-alert',
-    success: 'circle-check',
-    info: 'info',
+  const VARIANTS: Record<Variant, { icon: IconName; prefix: string }> = {
+    info: { icon: 'info', prefix: 'Information :' },
+    success: { icon: 'circle-check', prefix: 'Succès :' },
+    warning: { icon: 'triangle-alert', prefix: 'Attention :' },
+    error: { icon: 'circle-alert', prefix: 'Erreur :' },
   }
 
-  const { severity, children, action, 'data-testid': testId }: Props = $props()
+  const { variant = 'info', title, role, children, 'data-testid': testId }: Props = $props()
 </script>
 
-<div class={['alert', `alert-${severity}`]} data-testid={testId}>
-  <Icon name={SEVERITY_ICONS[severity]} />
-  <p class="grow">{@render children()}</p>
-  {@render action?.()}
+<div class={['bui-alert', `bui-alert--${variant}`]} {role} data-testid={testId}>
+  <Icon name={VARIANTS[variant].icon} class="bui-alert__icon" />
+  <div class="bui-alert__content">
+    <span class="bui-visually-hidden">{VARIANTS[variant].prefix}</span>
+    {#if title}
+      <p class="bui-alert__title">{title}</p>
+    {/if}
+    <div class="bui-alert__body">{@render children()}</div>
+  </div>
 </div>

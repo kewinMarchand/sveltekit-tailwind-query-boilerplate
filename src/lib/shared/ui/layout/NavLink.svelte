@@ -3,7 +3,6 @@
 
   import { isActivePath } from '#lib/shared/config'
   import { resolveHref } from '#lib/shared/routing'
-  import { Button } from '#lib/shared/ui/kit'
 
   import type { NavigationItem } from '#lib/shared/config'
 
@@ -12,6 +11,6 @@
   const isActive = $derived(isActivePath(page.url.pathname, href))
 </script>
 
-<Button href={resolveHref(href)} variant="nav" aria-current={isActive ? 'page' : undefined}>
+<a href={resolveHref(href)} class="btn btn-nav" aria-current={isActive ? 'page' : undefined}>
   {label}
-</Button>
+</a>

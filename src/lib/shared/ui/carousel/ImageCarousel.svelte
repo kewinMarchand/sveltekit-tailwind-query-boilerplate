@@ -60,9 +60,9 @@
       aria-controls={viewportId}
       disabled={!carousel.canPrevious}
       onclick={carousel.previous}
+      icon="chevron-left"
       data-testid="carousel-prev"
     >
-      <Icon name="chevron-left" />
       Précédent
     </Button>
     <Button

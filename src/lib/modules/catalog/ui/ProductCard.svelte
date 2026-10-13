@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ResponsiveImage } from '#lib/shared/ui/kit'
+  import { Badge, ResponsiveImage } from '#lib/shared/ui/kit'
 
   import { formatPrice } from '../domain/price'
   import { EXPOSURE_LABELS, SIZE_LABELS } from './labels'
@@ -42,7 +42,7 @@
         {EXPOSURE_LABELS[product.exposure]} · Taille {SIZE_LABELS[product.size].toLowerCase()}
       </p>
       {#if !product.inStock}
-        <p class="badge">Rupture de stock</p>
+        <p class="mt-1"><Badge label="Rupture de stock" variant="error" /></p>
       {/if}
     </div>
   </div>

@@ -3,19 +3,10 @@
 
   interface Props {
     name: IconName
-    size?: number
-    label?: string
+    class?: string
   }
 
-  const { name, size = 20, label }: Props = $props()
+  const { name, class: className }: Props = $props()
 </script>
 
-{#if label}
-  <svg width={size} height={size} role="img" aria-label={label}>
-    <use href="/icons.svg#{name}"></use>
-  </svg>
-{:else}
-  <svg width={size} height={size} aria-hidden="true" focusable="false">
-    <use href="/icons.svg#{name}"></use>
-  </svg>
-{/if}
+<svg class={['bui-icon', className]} aria-hidden="true"><use href="/icons.svg#{name}"></use></svg>

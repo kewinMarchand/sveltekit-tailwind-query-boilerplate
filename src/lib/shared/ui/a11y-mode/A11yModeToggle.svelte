@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { Button, Icon } from '#lib/shared/ui/kit'
+  import { Icon } from '#lib/shared/ui/kit'
 
   import { useA11yMode } from './useA11yMode.svelte'
 
   const mode = useA11yMode()
 </script>
 
-<Button
+<button
   type="button"
-  variant="nav"
-  class="max-lg:size-touch max-lg:shrink-0 max-lg:px-0"
+  class="btn btn-nav max-lg:size-touch max-lg:shrink-0 max-lg:px-0"
   aria-label="Accessibilité renforcée"
   aria-pressed={mode.enhanced}
   onclick={mode.toggle}
@@ -17,4 +16,4 @@
 >
   <Icon name="person-standing" />
   <span class="max-lg:sr-only">Accessibilité renforcée</span>
-</Button>
+</button>

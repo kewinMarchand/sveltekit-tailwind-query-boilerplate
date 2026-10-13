@@ -23,7 +23,6 @@ S'y ajoutent : menu de catégories en cascade (desktop) et en niveaux (mobile), 
 | Svelte 5 (runes), TypeScript 6 (strict) | UI et typage                                                                 |
 | Tailwind CSS 4                          | Styles, sur les tokens de boilerplates-ui (`src/lib/shared/theme/theme.css`) |
 | boilerplates-ui                         | Tokens, CSS des composants et comportement natif communs aux boilerplates    |
-| bits-ui                                 | Primitives accessibles : `Button` et `Dialog` uniquement                     |
 | TanStack Svelte Query 6                 | Cache et synchronisation des données côté client                             |
 | sveltekit-superforms 3 + zod 4          | Formulaires validés côté serveur et client, même schéma                      |
 | Embla Carousel 8                        | Carrousel (glisser, swipe, molette), via `shared/ui/carousel`                |
@@ -226,6 +225,12 @@ Le pattern est dans `src/lib/modules/task/` :
 
 1. Ajouter le champ et son message d'erreur dans `src/lib/modules/contact/domain/contactSchema.ts`. Le type du formulaire en découle.
 2. Ajouter le `TextField` dans `ContactForm.svelte` avec `errors={$errors.champ}` et `bind:value={$form.champ}`. Le message est relié au champ par `aria-describedby`.
+
+### Composants de boilerplates-ui
+
+Tokens, CSS et comportement des composants génériques viennent de [boilerplates-ui](https://github.com/kewinMarchand/boilerplates-ui), documentés dans son [Storybook](https://kewinmarchand.github.io/boilerplates-ui/). `src/lib/shared/ui/kit/` en contient les versions Svelte : bouton, bouton icône, champ, liste déroulante, case et interrupteur, alerte, badge, squelette, tiroir, icône. Ils recopient le balisage de référence de la bibliothèque. La charte graphique (`/charte-graphique`) montre leur rendu dans le site.
+
+Monter de version : changer l'étiquette dans `package.json` (`github:kewinMarchand/boilerplates-ui#vX.Y.Z`), lancer `make install`, puis reporter dans le kit les changements de balisage de la nouvelle version.
 
 ### Ajouter une icône
 

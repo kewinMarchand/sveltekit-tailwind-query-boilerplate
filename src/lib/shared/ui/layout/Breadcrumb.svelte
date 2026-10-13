@@ -10,14 +10,14 @@
   const { items }: Props = $props()
 </script>
 
-<nav aria-label="Fil d'Ariane" class="breadcrumb" data-testid="layout-breadcrumb">
-  <ol>
+<nav class="bui-breadcrumb mb-4" aria-label="Fil d’Ariane" data-testid="layout-breadcrumb">
+  <ol class="bui-breadcrumb__list">
     {#each items as item, index (item.path)}
-      <li>
+      <li class="bui-breadcrumb__item">
         {#if index === items.length - 1}
-          <span aria-current="page">{item.label}</span>
+          <span class="bui-breadcrumb__current" aria-current="page">{item.label}</span>
         {:else}
-          <a href={resolveHref(item.path)}>{item.label}</a>
+          <a class="bui-link" href={resolveHref(item.path)}>{item.label}</a>
         {/if}
       </li>
     {/each}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Alert, Button, Icon } from '#lib/shared/ui/kit'
+  import { Alert, Button, Skeleton } from '#lib/shared/ui/kit'
 
   import BlogCard from './BlogCard.svelte'
 
@@ -24,21 +24,18 @@
     data-testid="home-blog-loading"
   >
     {#each [1, 2, 3] as key (key)}
-      <div class="skeleton h-32"></div>
+      <Skeleton height="128px" />
     {/each}
   </div>
 {:else if status === 'error'}
-  <Alert severity="error" data-testid="home-blog-error">
-    {errorMessage}
-    {#snippet action()}
-      <Button variant="inherit" onclick={onRetry} data-testid="home-blog-retry">
-        <Icon name="rotate-cw" />
-        Réessayer
-      </Button>
-    {/snippet}
-  </Alert>
+  <div class="flex flex-col items-start gap-3">
+    <Alert variant="error" data-testid="home-blog-error">{errorMessage}</Alert>
+    <Button variant="outline" icon="rotate-cw" onclick={onRetry} data-testid="home-blog-retry">
+      Réessayer
+    </Button>
+  </div>
 {:else if !articles?.length}
-  <Alert severity="info" data-testid="home-blog-empty">
+  <Alert variant="info" data-testid="home-blog-empty">
     Aucun article publié pour l'instant. Revenez bientôt.
   </Alert>
 {:else}

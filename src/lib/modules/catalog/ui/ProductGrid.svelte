@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Alert, Button, Icon } from '#lib/shared/ui/kit'
+  import { Alert, Button, Skeleton } from '#lib/shared/ui/kit'
 
   import ProductCard from './ProductCard.svelte'
 
@@ -23,22 +23,19 @@
 {#if status === 'pending'}
   <div class="catalog-grid" role="status" aria-label="Chargement des produits">
     {#each [1, 2, 3, 4] as key (key)}
-      <div class="skeleton h-80"></div>
+      <Skeleton height="320px" />
     {/each}
   </div>
 {:else if status === 'error'}
-  <Alert severity="error" data-testid="catalog-error">
-    {errorMessage}
-    {#snippet action()}
-      <Button variant="inherit" onclick={onRetry} data-testid="catalog-retry">
-        <Icon name="rotate-cw" />
-        Réessayer
-      </Button>
-    {/snippet}
-  </Alert>
+  <div class="flex flex-col items-start gap-3">
+    <Alert variant="error" data-testid="catalog-error">{errorMessage}</Alert>
+    <Button variant="outline" icon="rotate-cw" onclick={onRetry} data-testid="catalog-retry">
+      Réessayer
+    </Button>
+  </div>
 {:else if products.length === 0}
   <div class="flex flex-col items-start gap-4" data-testid="catalog-empty">
-    <Alert severity="info">Aucun produit ne correspond à ces filtres.</Alert>
+    <Alert variant="info">Aucun produit ne correspond à ces filtres.</Alert>
     {@render clearAction()}
   </div>
 {:else}

@@ -3,7 +3,7 @@
   import { resolveHref } from '#lib/shared/routing'
   import { absoluteUrl } from '#lib/shared/seo'
   import { useIsDesktop } from '#lib/shared/ui/hooks'
-  import { Icon, SidePanel } from '#lib/shared/ui/kit'
+  import { Button, Drawer, Icon } from '#lib/shared/ui/kit'
   import { PageHeader } from '#lib/shared/ui/layout'
 
   import { clearFilters, countActiveFilters, isFiltered } from '../domain/catalogQuery'
@@ -83,13 +83,13 @@
 />
 
 {#snippet clearAction()}
-  <a
+  <Button
     href={catalogHref(path, clearFilters(query))}
-    class="btn btn-outline"
+    variant="outline"
     data-testid="catalog-clear-filters"
   >
     Tout effacer
-  </a>
+  </Button>
 {/snippet}
 
 {#if listing && listing.children.length > 0}
@@ -113,10 +113,11 @@
   <div class="min-w-0">
     {#snippet filterButton()}
       {#if listing}
-        <SidePanel
+        <Drawer
           bind:open={filtersOpen}
           title="Filtres"
-          triggerClass="btn btn-outline hidden js:max-lg:inline-flex"
+          side="start"
+          triggerClass="bui-button bui-button--outline hidden js:max-lg:inline-flex"
           triggerTestId="catalog-filters-open"
         >
           {#snippet trigger()}
@@ -124,14 +125,10 @@
             Filtrer{activeCount > 0 ? ` (${activeCount})` : ''}
           {/snippet}
           <CatalogFilters {query} {listing} onsubmit={navigation.submitForm} />
-          <button
-            type="button"
-            class="btn btn-primary mt-6 w-full"
-            onclick={() => (filtersOpen = false)}
-          >
+          <Button class="mt-6 w-full" onclick={() => (filtersOpen = false)}>
             Voir les {listing.total} produits
-          </button>
-        </SidePanel>
+          </Button>
+        </Drawer>
       {/if}
     {/snippet}
 

@@ -3,7 +3,7 @@
 
   import { CATALOG_NAVIGATION, isActivePath, MAIN_NAVIGATION } from '#lib/shared/config'
   import { resolveHref } from '#lib/shared/routing'
-  import { Icon, SidePanel } from '#lib/shared/ui/kit'
+  import { Button, Drawer, Icon } from '#lib/shared/ui/kit'
 
   import { useDrillDown } from './hooks/useDrillDown.svelte'
 
@@ -35,10 +35,9 @@
   }
 </script>
 
-<SidePanel
+<Drawer
   bind:open
   title="Menu"
-  side="right"
   triggerClass="btn btn-nav btn-icon"
   triggerLabel="Menu"
   triggerTestId="layout-mobile-menu-toggle"
@@ -51,15 +50,15 @@
   <nav aria-label="Menu mobile">
     {#if drill.current}
       {@const current = drill.current}
-      <button
-        type="button"
-        class="btn btn-inherit mb-2"
+      <Button
+        variant="ghost"
+        icon="chevron-left"
+        class="mb-2"
         data-testid="layout-mobile-menu-back"
         onclick={drill.back}
       >
-        <Icon name="chevron-left" />
         Retour à {drill.parentLabel ?? 'Menu'}
-      </button>
+      </Button>
       <h2 class="mb-2 text-title font-semibold" tabindex="-1" bind:this={heading}>
         {current.label}
       </h2>
@@ -106,4 +105,4 @@
       </ul>
     {/if}
   </nav>
-</SidePanel>
+</Drawer>

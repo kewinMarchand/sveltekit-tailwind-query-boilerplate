@@ -1,5 +1,6 @@
 <script lang="ts">
   import { resolveHref } from '#lib/shared/routing'
+  import { Button, Checkbox, Icon } from '#lib/shared/ui/kit'
 
   import { queryEntries } from '../domain/catalogQuery'
   import { EXPOSURE_LABELS, SIZE_LABELS } from './labels'
@@ -13,6 +14,8 @@
   }
 
   const { query, listing, onsubmit }: Props = $props()
+
+  const uid = $props.id()
 
   const keptFields = $derived(
     queryEntries(query, ['exposition', 'taille', 'prix_min', 'prix_max', 'en_stock']),
@@ -30,112 +33,108 @@
     <input type="hidden" {name} {value} />
   {/each}
 
-  {#if listing.children.length > 0}
-    <details open class="facet">
-      <summary>Catégorie</summary>
-      <ul class="flex flex-col">
-        {#each listing.children as child (child.slug)}
-          <li>
-            <a href={resolveHref(child.path)} class="facet-link">
-              {child.name} <span class="text-text-muted">({child.count})</span>
-            </a>
-          </li>
-        {/each}
-      </ul>
-    </details>
-  {/if}
+  <div class="bui-accordion">
+    {#if listing.children.length > 0}
+      <details open class="bui-accordion__item">
+        <summary class="bui-accordion__summary">
+          Catégorie<Icon name="chevron-down" class="bui-accordion__icon" />
+        </summary>
+        <ul class="bui-accordion__content flex flex-col">
+          {#each listing.children as child (child.slug)}
+            <li>
+              <a href={resolveHref(child.path)} class="facet-link">
+                {child.name} <span class="text-text-muted">({child.count})</span>
+              </a>
+            </li>
+          {/each}
+        </ul>
+      </details>
+    {/if}
 
-  <details open class="facet">
-    <summary>Exposition</summary>
-    <fieldset>
-      <legend class="sr-only">Exposition</legend>
-      {#each listing.facets.exposure as { value, count } (value)}
-        {@const checked = query.exposures.includes(value)}
-        <label class="facet-option">
-          <input
-            type="checkbox"
+    <details open class="bui-accordion__item">
+      <summary class="bui-accordion__summary">
+        Exposition<Icon name="chevron-down" class="bui-accordion__icon" />
+      </summary>
+      <fieldset class="bui-accordion__content flex flex-col gap-2">
+        <legend class="sr-only">Exposition</legend>
+        {#each listing.facets.exposure as { value, count } (value)}
+          {@const checked = query.exposures.includes(value)}
+          <Checkbox
+            id="{uid}-exposition-{value}"
+            label="{EXPOSURE_LABELS[value]} ({count})"
             name="exposition"
             {value}
             {checked}
             disabled={count === 0 && !checked}
             data-testid={`catalog-filter-exposure-${value}`}
           />
-          {EXPOSURE_LABELS[value]} <span class="text-text-muted">({count})</span>
-        </label>
-      {/each}
-    </fieldset>
-  </details>
+        {/each}
+      </fieldset>
+    </details>
 
-  <details open class="facet">
-    <summary>Taille</summary>
-    <fieldset>
-      <legend class="sr-only">Taille</legend>
-      {#each listing.facets.size as { value, count } (value)}
-        {@const checked = query.sizes.includes(value)}
-        <label class="facet-option">
-          <input
-            type="checkbox"
+    <details open class="bui-accordion__item">
+      <summary class="bui-accordion__summary">
+        Taille<Icon name="chevron-down" class="bui-accordion__icon" />
+      </summary>
+      <fieldset class="bui-accordion__content flex flex-col gap-2">
+        <legend class="sr-only">Taille</legend>
+        {#each listing.facets.size as { value, count } (value)}
+          {@const checked = query.sizes.includes(value)}
+          <Checkbox
+            id="{uid}-taille-{value}"
+            label="{SIZE_LABELS[value]} ({count})"
             name="taille"
             {value}
             {checked}
             disabled={count === 0 && !checked}
             data-testid={`catalog-filter-size-${value}`}
           />
-          {SIZE_LABELS[value]} <span class="text-text-muted">({count})</span>
-        </label>
-      {/each}
-    </fieldset>
-  </details>
+        {/each}
+      </fieldset>
+    </details>
 
-  <details open class="facet">
-    <summary>Prix</summary>
-    <fieldset class="flex flex-wrap gap-3">
-      <legend class="sr-only">Prix en euros</legend>
-      <label class="field w-28">
-        Minimum (€)
-        <input
-          type="number"
-          name="prix_min"
-          min="0"
-          inputmode="numeric"
-          class="field-input"
-          value={query.priceMin ?? ''}
-          data-testid="catalog-filter-price-min"
-        />
-      </label>
-      <label class="field w-28">
-        Maximum (€)
-        <input
-          type="number"
-          name="prix_max"
-          min="0"
-          inputmode="numeric"
-          class="field-input"
-          value={query.priceMax ?? ''}
-          data-testid="catalog-filter-price-max"
-        />
-      </label>
-    </fieldset>
-  </details>
+    <details open class="bui-accordion__item">
+      <summary class="bui-accordion__summary">
+        Prix<Icon name="chevron-down" class="bui-accordion__icon" />
+      </summary>
+      <fieldset class="bui-accordion__content flex flex-wrap gap-3">
+        <legend class="sr-only">Prix en euros</legend>
+        {#each [{ name: 'prix_min', label: 'Minimum (€)', value: query.priceMin, testId: 'catalog-filter-price-min' }, { name: 'prix_max', label: 'Maximum (€)', value: query.priceMax, testId: 'catalog-filter-price-max' }] as field (field.name)}
+          <div class="bui-field w-28">
+            <label class="bui-field__label" for="{uid}-{field.name}">{field.label}</label>
+            <input
+              class="bui-field__input"
+              type="number"
+              id="{uid}-{field.name}"
+              name={field.name}
+              min="0"
+              inputmode="numeric"
+              value={field.value ?? ''}
+              data-testid={field.testId}
+            />
+          </div>
+        {/each}
+      </fieldset>
+    </details>
 
-  <details open class="facet">
-    <summary>Disponibilité</summary>
-    <fieldset>
-      <legend class="sr-only">Disponibilité</legend>
-      <label class="facet-option">
-        <input
-          type="checkbox"
-          role="switch"
+    <details open class="bui-accordion__item">
+      <summary class="bui-accordion__summary">
+        Disponibilité<Icon name="chevron-down" class="bui-accordion__icon" />
+      </summary>
+      <fieldset class="bui-accordion__content">
+        <legend class="sr-only">Disponibilité</legend>
+        <Checkbox
+          switch
+          id="{uid}-en-stock"
+          label="En stock uniquement"
           name="en_stock"
           value="1"
-          class="switch"
           checked={query.inStock}
           data-testid="catalog-filter-in-stock"
         />
-        En stock uniquement
-      </label>
-    </fieldset>
-  </details>
+      </fieldset>
+    </details>
+  </div>
 
-  <button type="submit" class="btn btn-primary js:hidden">Appliquer les filtres</button>
+  <Button type="submit" class="js:hidden">Appliquer les filtres</Button>
 </form>

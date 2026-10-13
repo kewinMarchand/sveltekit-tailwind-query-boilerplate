@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Button, Select } from '#lib/shared/ui/kit'
+
   import { SORTS } from '../domain/catalog'
   import { queryEntries } from '../domain/catalogQuery'
   import { catalogHref } from './hooks/useCatalogNavigation.svelte'
@@ -20,6 +22,7 @@
 
   const sortId = $props.id()
   const keptFields = $derived(queryEntries(query, ['tri']))
+  const sortOptions = SORTS.map((sort) => ({ value: sort, label: SORT_LABELS[sort] }))
 
   const handleSortChange = (event: Event) => {
     const select = event.currentTarget
@@ -39,21 +42,16 @@
     {#each keptFields as [name, value], index (`${name}-${index}`)}
       <input type="hidden" {name} {value} />
     {/each}
-    <label for={sortId} class="field">
-      Trier par
-      <select
-        id={sortId}
-        name="tri"
-        class="field-input"
-        data-testid="catalog-sort"
-        onchange={handleSortChange}
-      >
-        {#each SORTS as sort (sort)}
-          <option value={sort} selected={sort === query.sort}>{SORT_LABELS[sort]}</option>
-        {/each}
-      </select>
-    </label>
-    <button type="submit" class="btn btn-outline js:hidden">Trier</button>
+    <Select
+      id={sortId}
+      label="Trier par"
+      name="tri"
+      options={sortOptions}
+      value={query.sort}
+      data-testid="catalog-sort"
+      onchange={handleSortChange}
+    />
+    <Button type="submit" variant="outline" class="js:hidden">Trier</Button>
   </form>
   <nav aria-label="Affichage" class="flex gap-1">
     <a

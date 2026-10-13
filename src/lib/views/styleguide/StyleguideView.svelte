@@ -21,7 +21,12 @@
 
 <p class="lead">
   Page de développement, absente en production. Le bouton « Accessibilité renforcée » de l’en-tête
-  permet de comparer les deux modes.
+  permet de comparer les deux modes. Les composants génériques viennent de boilerplates-ui,
+  documentés dans son <a
+    class="bui-link"
+    href="https://kewinmarchand.github.io/boilerplates-ui/"
+    rel="external">Storybook</a
+  >.
 </p>
 
 <ColorsSection />

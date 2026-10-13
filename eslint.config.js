@@ -28,6 +28,10 @@ const API_CLIENT_WRAPPER = {
   group: ['openapi-fetch'],
   message: 'L’API passe par le client typé #lib/shared/api/client.',
 }
+const UI_LIBRARY_WRAPPER = {
+  group: ['@kewinmarchand/boilerplates-ui', '@kewinmarchand/boilerplates-ui/*'],
+  message: 'boilerplates-ui passe par le kit #lib/shared/ui/kit.',
+}
 const CAROUSEL_WRAPPER = {
   group: ['embla-carousel', 'embla-carousel-*'],
   message: 'Embla passe par le wrapper #lib/shared/ui/carousel.',
@@ -39,7 +43,6 @@ const FRAMEWORK_PACKAGES = [
   '$app/*',
   '@sveltejs/*',
   '@tanstack/*',
-  'bits-ui',
   'sveltekit-superforms',
   'sveltekit-superforms/*',
 ]
@@ -175,6 +178,7 @@ export default defineConfig(
             ICONS_WRAPPER,
             CAROUSEL_WRAPPER,
             API_CLIENT_WRAPPER,
+            UI_LIBRARY_WRAPPER,
             OBSERVABILITY_WRAPPER,
           ],
         },
@@ -225,6 +229,7 @@ export default defineConfig(
             ICONS_WRAPPER,
             CAROUSEL_WRAPPER,
             API_CLIENT_WRAPPER,
+            UI_LIBRARY_WRAPPER,
             OBSERVABILITY_WRAPPER,
             FRAMEWORKS_IN_DOMAIN,
           ],
@@ -243,6 +248,7 @@ export default defineConfig(
             ICONS_WRAPPER,
             CAROUSEL_WRAPPER,
             API_CLIENT_WRAPPER,
+            UI_LIBRARY_WRAPPER,
             OBSERVABILITY_WRAPPER,
             FRAMEWORKS_IN_APPLICATION,
           ],
@@ -259,7 +265,15 @@ export default defineConfig(
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, CAROUSEL_WRAPPER, API_CLIENT_WRAPPER] },
+        {
+          patterns: [
+            RELATIVE_DEPTH,
+            ICONS_WRAPPER,
+            CAROUSEL_WRAPPER,
+            API_CLIENT_WRAPPER,
+            UI_LIBRARY_WRAPPER,
+          ],
+        },
       ],
     },
   },
@@ -268,7 +282,7 @@ export default defineConfig(
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [RELATIVE_DEPTH, CAROUSEL_WRAPPER, API_CLIENT_WRAPPER] },
+        { patterns: [RELATIVE_DEPTH, CAROUSEL_WRAPPER, API_CLIENT_WRAPPER, UI_LIBRARY_WRAPPER] },
       ],
     },
   },
@@ -282,11 +296,28 @@ export default defineConfig(
     },
   },
   {
+    files: ['src/lib/shared/ui/kit/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            RELATIVE_DEPTH,
+            ICONS_WRAPPER,
+            CAROUSEL_WRAPPER,
+            OBSERVABILITY_WRAPPER,
+            API_CLIENT_WRAPPER,
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['src/lib/shared/ui/carousel/**'],
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, API_CLIENT_WRAPPER] },
+        { patterns: [RELATIVE_DEPTH, ICONS_WRAPPER, API_CLIENT_WRAPPER, UI_LIBRARY_WRAPPER] },
       ],
     },
   },

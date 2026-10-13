@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Icon from './Icon.svelte'
+
   import type { HTMLInputAttributes } from 'svelte/elements'
 
   interface Props {
@@ -6,7 +8,7 @@
     label: string
     value: string
     errors?: string[] | undefined
-    help?: string
+    hint?: string
     disabled?: boolean
     multiline?: boolean
     type?: HTMLInputAttributes['type']
@@ -20,7 +22,7 @@
     label,
     value = $bindable(),
     errors,
-    help,
+    hint,
     disabled = false,
     multiline = false,
     type = 'text',
@@ -29,49 +31,49 @@
     'data-testid': testId,
   }: Props = $props()
 
-  const id = $props.id()
-  const inputId = $derived(`${id}-${name}`)
-  const errorId = $derived(`${inputId}-error`)
-  const helpId = $derived(`${inputId}-help`)
+  const uid = $props.id()
+  const id = $derived(`${uid}-${name}`)
   const error = $derived(errors?.[0])
   const describedBy = $derived(
-    [help && helpId, error && errorId].filter(Boolean).join(' ') || undefined,
+    [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(' ') || undefined,
   )
 </script>
 
-<div class="field">
-  <label for={inputId}>{label}{required ? ' *' : ''}</label>
+<div class="bui-field">
+  <label class="bui-field__label" for={id}
+    >{label}{#if required}<span class="bui-field__required">&nbsp;(obligatoire)</span>{/if}</label
+  >
+  {#if hint}
+    <p class="bui-field__hint" id="{id}-hint">{hint}</p>
+  {/if}
   {#if multiline}
     <textarea
-      id={inputId}
-      {name}
+      class="bui-field__input bui-field__input--multiline"
       rows="4"
-      class="field-input"
+      {id}
+      {name}
       {required}
+      {disabled}
       aria-invalid={error ? 'true' : undefined}
       aria-describedby={describedBy}
-      {disabled}
       data-testid={testId}
       bind:value></textarea>
   {:else}
     <input
-      id={inputId}
-      {name}
+      class="bui-field__input"
       {type}
       {autocomplete}
-      class="field-input"
+      {id}
+      {name}
       {required}
+      {disabled}
       aria-invalid={error ? 'true' : undefined}
       aria-describedby={describedBy}
-      {disabled}
       data-testid={testId}
       bind:value
     />
   {/if}
-  {#if help}
-    <p id={helpId} class="text-body-sm text-text-muted">{help}</p>
-  {/if}
   {#if error}
-    <p id={errorId} class="field-error">{error}</p>
+    <p class="bui-field__error" id="{id}-error"><Icon name="circle-alert" />{error}</p>
   {/if}
 </div>

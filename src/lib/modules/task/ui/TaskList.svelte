@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Alert, Button, Icon } from '#lib/shared/ui/kit'
+  import { Alert, Button, Icon, Skeleton } from '#lib/shared/ui/kit'
 
   import type { Task } from '../domain/task'
 
@@ -22,21 +22,18 @@
     data-testid="tasks-loading"
   >
     {#each [1, 2, 3] as key (key)}
-      <div class="skeleton"></div>
+      <Skeleton />
     {/each}
   </div>
 {:else if status === 'error'}
-  <Alert severity="error" data-testid="tasks-error">
-    {errorMessage}
-    {#snippet action()}
-      <Button variant="inherit" onclick={onRetry} data-testid="tasks-retry">
-        <Icon name="rotate-cw" />
-        Réessayer
-      </Button>
-    {/snippet}
-  </Alert>
+  <div class="flex flex-col items-start gap-3">
+    <Alert variant="error" data-testid="tasks-error">{errorMessage}</Alert>
+    <Button variant="outline" icon="rotate-cw" onclick={onRetry} data-testid="tasks-retry">
+      Réessayer
+    </Button>
+  </div>
 {:else if !tasks?.length}
-  <Alert severity="info" data-testid="tasks-empty">
+  <Alert variant="info" data-testid="tasks-empty">
     Aucune tâche pour l'instant. Tout est à jour.
   </Alert>
 {:else}

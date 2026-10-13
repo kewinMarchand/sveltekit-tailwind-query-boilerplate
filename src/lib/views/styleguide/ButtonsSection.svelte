@@ -1,21 +1,19 @@
 <script lang="ts">
-  import { Button } from '#lib/shared/ui/kit'
+  import { Button, IconButton } from '#lib/shared/ui/kit'
 
   import Section from './Section.svelte'
 
-  const VARIANTS = ['primary', 'outline', 'inherit'] as const
-  const STATES = ['défaut', 'survol', 'focus', 'actif', 'désactivé', 'chargement'] as const
-  const FORCED: Record<(typeof STATES)[number], string | undefined> = {
-    défaut: undefined,
-    survol: 'hover',
-    focus: 'focus',
-    actif: 'active',
-    désactivé: undefined,
-    chargement: undefined,
-  }
+  const VARIANTS = ['primary', 'secondary', 'outline', 'ghost'] as const
+  const STATES = ['défaut', 'désactivé', 'chargement'] as const
 </script>
 
 <Section id="boutons" title="Boutons">
+  <p class="mb-4">
+    Boutons de boilerplates-ui. Survol, focus et appui sont montrés état par état dans le
+    <a class="bui-link" href="https://kewinmarchand.github.io/boilerplates-ui/" rel="external"
+      >Storybook de la bibliothèque</a
+    >.
+  </p>
   <div class="overflow-x-auto">
     <table class="w-full border-separate border-spacing-2 text-left">
       <thead>
@@ -24,6 +22,7 @@
           {#each STATES as state (state)}
             <th scope="col" class="text-body-sm">{state}</th>
           {/each}
+          <th scope="col" class="text-body-sm">icône seule</th>
         </tr>
       </thead>
       <tbody>
@@ -32,24 +31,24 @@
             <th scope="row" class="text-body-sm"><code>{variant}</code></th>
             {#each STATES as state (state)}
               <td>
-                <Button
-                  type="button"
-                  {variant}
-                  data-force={FORCED[state]}
-                  disabled={state === 'désactivé'}
-                  loading={state === 'chargement'}
-                >
+                <Button {variant} disabled={state === 'désactivé'} loading={state === 'chargement'}>
                   Action
                 </Button>
               </td>
             {/each}
+            <td>
+              {#if variant !== 'secondary'}
+                <IconButton {variant} icon="rotate-cw" label="Réessayer" />
+              {/if}
+            </td>
           </tr>
         {/each}
       </tbody>
     </table>
   </div>
-  <div class="mt-4 flex flex-wrap gap-2 rounded-md bg-primary p-4">
-    <Button type="button" variant="outline-light">Contour clair</Button>
-    <Button type="button" variant="nav">Navigation</Button>
+  <p class="mt-6 mb-2">Boutons propres au site, sur la couleur primaire (en-tête, héros) :</p>
+  <div class="flex flex-wrap gap-2 rounded-md bg-primary p-4">
+    <button type="button" class="btn btn-outline-light">Contour clair</button>
+    <button type="button" class="btn btn-nav">Navigation</button>
   </div>
 </Section>

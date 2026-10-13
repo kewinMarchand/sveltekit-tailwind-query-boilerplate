@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Alert, Button, Icon, TextField } from '#lib/shared/ui/kit'
+  import { Alert, Button, TextField } from '#lib/shared/ui/kit'
 
   import { useContactForm } from './hooks/useContactForm.svelte'
 
@@ -17,9 +17,7 @@
 </script>
 
 <form method="POST" novalidate class="flex max-w-form flex-col gap-4" use:enhance>
-  <p class="text-body-sm" data-testid="contact-required-hint">
-    Les champs marqués d’un astérisque (*) sont obligatoires.
-  </p>
+  <p class="text-body-sm" data-testid="contact-required-hint">Tous les champs sont obligatoires.</p>
   <TextField
     name="name"
     label="Nom"
@@ -48,17 +46,16 @@
     data-testid="contact-message"
     bind:value={$form.message}
   />
-  <Button type="submit" loading={$submitting} data-testid="contact-submit">
-    <Icon name="mail" />
+  <Button type="submit" icon="mail" loading={$submitting} data-testid="contact-submit">
     Envoyer
   </Button>
   <div aria-live="polite">
     {#if $message?.status === 'success'}
-      <Alert severity="success" data-testid="contact-success">
+      <Alert variant="success" data-testid="contact-success">
         Merci, votre message a bien été envoyé.
       </Alert>
     {:else if $message?.status === 'error'}
-      <Alert severity="error" data-testid="contact-error">
+      <Alert variant="error" data-testid="contact-error">
         L'envoi a échoué. Réessayez dans quelques instants.
       </Alert>
     {/if}

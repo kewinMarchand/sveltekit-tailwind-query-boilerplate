@@ -1,28 +1,29 @@
 <script lang="ts">
-  import { Alert, Button, Icon } from '#lib/shared/ui/kit'
+  import { Alert, Badge, Button, Skeleton } from '#lib/shared/ui/kit'
 
   import Section from './Section.svelte'
 </script>
 
 <Section id="retours" title="Retours">
   <div class="flex flex-col gap-4">
-    <Alert severity="info">Information : le catalogue est mis à jour chaque lundi.</Alert>
-    <Alert severity="success">Succès : votre message a bien été envoyé.</Alert>
-    <Alert severity="warning">Avertissement : ce produit est bientôt épuisé.</Alert>
-    <Alert severity="error">Erreur : impossible de charger les données.</Alert>
+    <Alert variant="info">Le catalogue est mis à jour chaque lundi.</Alert>
+    <Alert variant="success">Votre message a bien été envoyé.</Alert>
+    <Alert variant="warning" title="Stock limité">Ce produit est bientôt épuisé.</Alert>
+    <Alert variant="error">Impossible de charger les données.</Alert>
     <div role="status" aria-label="Exemple de chargement" class="flex flex-col gap-2">
-      <div class="skeleton"></div>
-      <div class="skeleton"></div>
+      <Skeleton />
+      <Skeleton variant="text" width="60%" />
     </div>
-    <Alert severity="info">Aucun élément pour l'instant. Revenez bientôt.</Alert>
-    <Alert severity="error">
-      Le chargement a échoué.
-      {#snippet action()}
-        <Button type="button" variant="inherit">
-          <Icon name="rotate-cw" />
-          Réessayer
-        </Button>
-      {/snippet}
-    </Alert>
+    <p class="flex flex-wrap gap-2">
+      <Badge label="Neutre" />
+      <Badge label="Info" variant="info" />
+      <Badge label="Succès" variant="success" />
+      <Badge label="Attention" variant="warning" />
+      <Badge label="Rupture de stock" variant="error" />
+    </p>
+    <div class="flex flex-col items-start gap-3">
+      <Alert variant="error">Le chargement a échoué.</Alert>
+      <Button variant="outline" icon="rotate-cw">Réessayer</Button>
+    </div>
   </div>
 </Section>

@@ -1,34 +1,57 @@
 <script lang="ts">
-  import { Button } from 'bits-ui'
-
   import Icon from './Icon.svelte'
 
-  import type { ComponentProps } from 'svelte'
+  import type { IconName } from './iconNames'
+  import type { Snippet } from 'svelte'
+  import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements'
 
-  type Variant = 'primary' | 'outline' | 'outline-light' | 'inherit' | 'nav'
-
-  type Props = ComponentProps<typeof Button.Root> & {
-    variant?: Variant
+  type Props = Omit<HTMLButtonAttributes & HTMLAnchorAttributes, 'children'> & {
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
+    size?: 'sm' | 'md' | 'lg'
+    /** Lien en forme de bouton : même classes sur un `<a>`. */
+    href?: string
     loading?: boolean
+    icon?: IconName
+    children: Snippet
   }
 
   const {
     variant = 'primary',
+    size = 'md',
+    href,
+    type = 'button',
+    disabled,
     loading = false,
+    icon,
     class: className,
     children,
     ...rest
   }: Props = $props()
+
+  const classes = $derived([
+    'bui-button',
+    variant !== 'primary' && `bui-button--${variant}`,
+    size !== 'md' && `bui-button--${size}`,
+    className,
+  ])
 </script>
 
-<Button.Root
-  class={['btn', `btn-${variant}`, className]}
-  aria-busy={loading || undefined}
-  {...rest}
-  disabled={loading || rest.disabled}
->
+{#snippet content()}
   {#if loading}
-    <span class="motion-safe:animate-spin"><Icon name="loader-circle" /></span>
+    <Icon name="loader-circle" class="bui-button__spinner" />
+  {:else if icon}
+    <Icon name={icon} />
   {/if}
-  {@render children?.()}
-</Button.Root>
+  {@render children()}
+  {#if loading}
+    <span class="bui-visually-hidden">&nbsp;(chargement en cours)</span>
+  {/if}
+{/snippet}
+
+{#if href}
+  <a {href} class={classes} {...rest}>{@render content()}</a>
+{:else}
+  <button {type} class={classes} {disabled} aria-disabled={loading ? 'true' : undefined} {...rest}>
+    {@render content()}
+  </button>
+{/if}
