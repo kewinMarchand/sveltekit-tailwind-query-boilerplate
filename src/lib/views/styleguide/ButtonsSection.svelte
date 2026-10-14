@@ -37,18 +37,16 @@
               </td>
             {/each}
             <td>
-              {#if variant !== 'secondary'}
-                <IconButton {variant} icon="rotate-cw" label="Réessayer" />
-              {/if}
+              <IconButton {variant} icon="rotate-cw" label="Réessayer" />
             </td>
           </tr>
         {/each}
       </tbody>
     </table>
   </div>
-  <p class="mt-6 mb-2">Boutons propres au site, sur la couleur primaire (en-tête, héros) :</p>
+  <p class="mt-6 mb-2">Sur la couleur primaire (en-tête, héros) :</p>
   <div class="flex flex-wrap gap-2 rounded-md bg-primary p-4">
-    <button type="button" class="btn btn-outline-light">Contour clair</button>
-    <button type="button" class="btn btn-nav">Navigation</button>
+    <Button variant="inverse">Inverse</Button>
+    <button type="button" class="btn btn-nav">Navigation (propre au site)</button>
   </div>
 </Section>

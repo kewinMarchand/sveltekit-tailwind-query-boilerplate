@@ -26,9 +26,9 @@
         <Button href={resolve('/taches')} data-testid="home-tasks-link">
           Voir la démo TanStack Query
         </Button>
-        <a href={resolve('/contact')} class="btn btn-outline-light" data-testid="home-contact-link">
+        <Button href={resolve('/contact')} variant="inverse" data-testid="home-contact-link">
           Voir le formulaire
-        </a>
+        </Button>
       </div>
     </div>
   </div>

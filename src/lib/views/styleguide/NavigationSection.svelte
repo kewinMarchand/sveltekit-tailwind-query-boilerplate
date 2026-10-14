@@ -36,7 +36,7 @@
         <li class="bui-pagination__ellipsis" aria-hidden="true">…</li>
         <li>
           <a class="bui-pagination__link" href={resolve('/plan-du-site')} rel="next"
-            >Suivant<Icon name="chevron-right" /></a
+            ><span class="bui-pagination__label">Suivant</span><Icon name="chevron-right" /></a
           >
         </li>
       </ul>

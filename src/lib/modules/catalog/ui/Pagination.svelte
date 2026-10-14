@@ -30,7 +30,7 @@
       {#if query.page > 1}
         <li>
           <a class="bui-pagination__link" href={hrefFor(query.page - 1)} rel="prev"
-            ><Icon name="chevron-left" />Précédent</a
+            ><Icon name="chevron-left" /><span class="bui-pagination__label">Précédent</span></a
           >
         </li>
       {/if}
@@ -51,7 +51,7 @@
       {#if query.page < totalPages}
         <li>
           <a class="bui-pagination__link" href={hrefFor(query.page + 1)} rel="next"
-            >Suivant<Icon name="chevron-right" /></a
+            ><span class="bui-pagination__label">Suivant</span><Icon name="chevron-right" /></a
           >
         </li>
       {/if}

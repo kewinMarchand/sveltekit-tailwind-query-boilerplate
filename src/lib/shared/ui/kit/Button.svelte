@@ -6,7 +6,7 @@
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements'
 
   type Props = Omit<HTMLButtonAttributes & HTMLAnchorAttributes, 'children'> & {
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'inverse'
     size?: 'sm' | 'md' | 'lg'
     /** Lien en forme de bouton : même classes sur un `<a>`. */
     href?: string

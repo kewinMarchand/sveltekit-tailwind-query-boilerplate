@@ -1,7 +1,7 @@
 <script lang="ts">
   interface Props {
     label: string
-    variant?: 'neutral' | 'info' | 'success' | 'warning' | 'error'
+    variant?: 'neutral' | 'secondary' | 'info' | 'success' | 'warning' | 'error'
   }
 
   const { label, variant = 'neutral' }: Props = $props()

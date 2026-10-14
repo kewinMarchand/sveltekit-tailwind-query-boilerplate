@@ -7,7 +7,7 @@
   type Props = Omit<HTMLButtonAttributes, 'children' | 'aria-label'> & {
     label: string
     icon: IconName
-    variant?: 'primary' | 'outline' | 'ghost'
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
     size?: 'sm' | 'md'
   }
 
