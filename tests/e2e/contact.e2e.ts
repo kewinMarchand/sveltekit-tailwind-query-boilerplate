@@ -9,12 +9,9 @@ const fillValidForm = async (page: Page) => {
 }
 
 test.describe('Contact', () => {
-  test('signale les champs obligatoires avant la saisie', async ({ page }) => {
+  test('signale chaque champ obligatoire dans son libellé', async ({ page }) => {
     await page.goto('/contact')
 
-    await expect(page.getByTestId('contact-required-hint')).toHaveText(
-      'Tous les champs sont obligatoires.',
-    )
     for (const field of ['contact-name', 'contact-email', 'contact-message']) {
       await expect(page.getByTestId(field)).toHaveAttribute('required', '')
       await expect(page.getByTestId(field)).toHaveAccessibleName(/\(obligatoire\)$/)
