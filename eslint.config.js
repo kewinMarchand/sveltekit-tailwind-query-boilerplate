@@ -60,6 +60,10 @@ const OBSERVABILITY_WRAPPER = {
   group: ['@sentry/*'],
   message: 'Le SDK GlitchTip passe par le wrapper #lib/shared/observability.',
 }
+const CSP_WRAPPER = {
+  group: ['@kewinmarchand/csp'],
+  message: 'La CSP passe par le wrapper #lib/shared/security.',
+}
 
 const sameModule = (type) => ({
   element: { type, captured: { module: '{{ from.element.captured.module }}' } },
@@ -192,6 +196,7 @@ export default defineConfig(
             API_CLIENT_WRAPPER,
             UI_LIBRARY_WRAPPER,
             OBSERVABILITY_WRAPPER,
+            CSP_WRAPPER,
           ],
         },
       ],
@@ -243,6 +248,7 @@ export default defineConfig(
             API_CLIENT_WRAPPER,
             UI_LIBRARY_WRAPPER,
             OBSERVABILITY_WRAPPER,
+            CSP_WRAPPER,
             FRAMEWORKS_IN_DOMAIN,
           ],
         },
@@ -262,6 +268,7 @@ export default defineConfig(
             API_CLIENT_WRAPPER,
             UI_LIBRARY_WRAPPER,
             OBSERVABILITY_WRAPPER,
+            CSP_WRAPPER,
             FRAMEWORKS_IN_APPLICATION,
           ],
         },
@@ -284,6 +291,24 @@ export default defineConfig(
             CAROUSEL_WRAPPER,
             API_CLIENT_WRAPPER,
             UI_LIBRARY_WRAPPER,
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/lib/shared/security/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            RELATIVE_DEPTH,
+            ICONS_WRAPPER,
+            CAROUSEL_WRAPPER,
+            API_CLIENT_WRAPPER,
+            UI_LIBRARY_WRAPPER,
+            OBSERVABILITY_WRAPPER,
           ],
         },
       ],

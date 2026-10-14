@@ -6,15 +6,19 @@ import {
   SCENARIO_HEADER,
   shouldReportError,
 } from '#lib/shared/observability/index.server'
+import { announceStartup, CSP, CSP_HEADER } from '#lib/shared/security/index.server'
 import { A11Y_MODE_INLINE_SCRIPT } from '#lib/shared/ui/a11y-mode'
 
 import { MAINTENANCE_HTML, MAINTENANCE_RETRY_AFTER_SECONDS } from '#lib/views/errors'
 
 import type { Handle, HandleServerError, ServerInit } from '@sveltejs/kit/hooks'
 
-export const init: ServerInit = () => initServerErrorReporting()
+export const init: ServerInit = () => {
+  announceStartup()
+  return initServerErrorReporting()
+}
 
-export const handle: Handle = ({ event, resolve }) => {
+export const handle: Handle = async ({ event, resolve }) => {
   if (MAINTENANCE === '1') {
     return new Response(MAINTENANCE_HTML, {
       status: 503,
@@ -25,10 +29,13 @@ export const handle: Handle = ({ event, resolve }) => {
     })
   }
 
-  return resolve(event, {
+  const response = await resolve(event, {
     preload: ({ type }) => type === 'css',
     transformPageChunk: ({ html }) => html.replace('%a11y-mode.script%', A11Y_MODE_INLINE_SCRIPT),
   })
+  // CSP en mode Report-Only : rien n'est bloqué, chaque écart est signalé à /api/csp-report
+  response.headers.set(CSP_HEADER, CSP)
+  return response
 }
 
 export const handleError: HandleServerError = ({ kind, error, event }) => {

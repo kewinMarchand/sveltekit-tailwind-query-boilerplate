@@ -232,6 +232,18 @@ Tokens, CSS et comportement des composants génériques viennent de [boilerplate
 
 Monter de version : changer l'étiquette dans `package.json` (`github:kewinMarchand/boilerplates-ui#vX.Y.Z`), lancer `make install`, puis reporter dans le kit les changements de balisage de la nouvelle version.
 
+### CSP et rapports de violation
+
+Chaque réponse porte un en-tête `Content-Security-Policy-Report-Only` construit par [`@kewinmarchand/csp`](https://github.com/kewinMarchand/csp), dans `src/lib/shared/security/` : rien n'est bloqué, le navigateur signale chaque ressource qu'une CSP stricte refuserait à `POST /api/csp-report`, qui écrit une ligne lisible sur la sortie standard du serveur :
+
+```
+[csp-report] https://cdn.exemple.com a besoin d'une autorisation de type script (script-src) — bloqué sur /contact
+```
+
+- **Lire les logs** : `docker compose logs -f web` pour l'image de production, la sortie de `make up` en développement, la console de l'hébergeur en production. Au démarrage, `[sveltekit-tailwind-query-boilerplate] serveur démarré (production)` permet de retrouver le bon fichier.
+- **Autoriser une origine** : l'ajouter à sa directive (le nom est entre parenthèses dans la ligne) dans `siteCsp()` de `src/lib/shared/security/csp.ts`. L'API (`API_URL`), Matomo et GlitchTip y sont déjà, quand leur variable est renseignée.
+- **Pourquoi Report-Only et `'unsafe-inline'`** : on collecte d'abord ce que le site charge vraiment avant de bloquer quoi que ce soit ; l'hydratation de SvelteKit écrit du script en ligne, et un nonce par réponse rendrait toutes les pages dynamiques.
+
 ### Ajouter une icône
 
 Ajouter son nom Lucide (lucide.dev/icons) dans `icons.json`, lancer `make icons`, puis versionner `icons.json`, `static/icons.svg` et `src/lib/shared/ui/kit/iconNames.ts`. L'utiliser avec `<Icon name="nom" />`. `make qa` échoue si le sprite n'a pas été régénéré.
