@@ -160,12 +160,24 @@ export default defineConfig(
       'simple-import-sort/imports': [
         'error',
         {
+          // Ordre de standards-front : 1 tiers (framework compris), 2 bibliothèque commune, 3 socle, 4 modules
+          // (index public, puis couches domain, application, infrastructure, ui), 5 vues, 6 relatifs, 7 types,
+          // 8 effets de bord (styles) en dernier, leur ordre ayant un effet.
           groups: [
-            ['^\\u0000'],
-            ['^node:', '^@?\\w', '^\\$app(?![\\w-])'],
-            ['^#lib/'],
+            ['^node:', '^(?!@kewinmarchand/)@?\\w', '^\\$app(?![\\w-])', '^\\$env(?![\\w-])'],
+            ['^@kewinmarchand/'],
+            ['^#lib/shared/'],
+            [
+              '^#lib/modules/[^/\\u0000]+(/index(\\.server)?)?$',
+              '^#lib/modules/[^/]+/domain/',
+              '^#lib/modules/[^/]+/application/',
+              '^#lib/modules/[^/]+/infrastructure/',
+              '^#lib/modules/[^/]+/ui/',
+            ],
+            ['^#lib/views/'],
             ['^\\.'],
             ['^.+\\u0000$'],
+            ['^\\u0000'],
           ],
         },
       ],

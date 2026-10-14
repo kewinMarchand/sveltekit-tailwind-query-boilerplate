@@ -51,7 +51,7 @@ Boilerplate personnel. Les conventions générales sont dans `~/.claude/CLAUDE.m
 - `@iconify-json/lucide` 1.2 (dev, 640 Ko installés, aucun effet sur le bundle) : les tracés Lucide (licence ISC) au format Iconify, lus par `tools/icons.ts`. Remplace `@lucide/svelte`, retiré.
 - `svgstore` 3.0 (dev, environ 2,3 Mo installés avec `cheerio` et ses dépendances, aucun effet sur le bundle) : assemble le sprite, un `<symbol>` par icône avec son `viewBox`.
 - `openapi-fetch` 0.17 (dev, embarqué par adapter-node et dans le chunk des tâches : 17 Ko non minifié, 4,4 Ko gzip avant minification, dépendance `openapi-typescript-helpers` en types seuls) : client typé par les `paths` générés, sans code généré. Seul `shared/api/client.ts` l'importe (règle ESLint).
-- `eslint-plugin-simple-import-sort` : impose l'ordre externes, `#lib/`, relatifs, types, que le modèle Next obtenait d'`eslint-plugin-import`. Léger, compatible ESLint 10 et fichiers `.svelte`.
+- `eslint-plugin-simple-import-sort` : impose l'ordre de standards-front : tiers (framework compris), bibliothèque commune, socle (`#lib/shared/`), modules (index public, puis couches `domain`, `application`, `infrastructure`, `ui`), vues, relatifs, types, puis styles en dernier. Le motif de l'index d'un module exclut `\u0000`, que le plugin ajoute aux imports de type : sans cela, un `import type` d'un module resterait dans le groupe des modules. Léger, compatible ESLint 10 et fichiers `.svelte`.
 - `@testing-library/dom` : peer, voir le tableau.
 
 ## Règles ESLint propres au projet

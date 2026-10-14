@@ -2,13 +2,14 @@ import { tick } from 'svelte'
 import { afterNavigate, goto, invalidate } from '$app/navigation'
 import { navigating, page } from '$app/state'
 
-import { CATALOG_DEPENDENCY } from '#lib/modules/catalog/application/dependencies'
+import { resolveHref } from '#lib/shared/routing'
+
 import {
   queryFromFormData,
   serializeCatalogQuery,
   withFilter,
 } from '#lib/modules/catalog/domain/catalogQuery'
-import { resolveHref } from '#lib/shared/routing'
+import { CATALOG_DEPENDENCY } from '#lib/modules/catalog/application/dependencies'
 
 import type { Catalog } from '#lib/modules/catalog/domain/catalog'
 import type { AppPath } from '#lib/shared/routing'

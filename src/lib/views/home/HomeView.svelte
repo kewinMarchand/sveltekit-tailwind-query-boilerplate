@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { BlogSection } from '#lib/modules/blog'
   import { SITE } from '#lib/shared/config'
   import { buildHomeJsonLd, buildPageMeta, SeoHead } from '#lib/shared/seo'
   import { ImageCarousel } from '#lib/shared/ui/carousel'
+
+  import { BlogSection } from '#lib/modules/blog'
 
   import { HOME_SLIDES } from './featuredSlides'
   import Hero from './Hero.svelte'

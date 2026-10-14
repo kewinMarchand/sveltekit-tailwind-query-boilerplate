@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { ResponsiveImage } from '#lib/shared/ui/kit'
+
   import { BlogCard } from '#lib/modules/blog'
   import { eurosToCents, ProductCard } from '#lib/modules/catalog'
-  import { ResponsiveImage } from '#lib/shared/ui/kit'
 
   import Section from './Section.svelte'
 

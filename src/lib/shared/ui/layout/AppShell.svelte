@@ -1,6 +1,4 @@
 <script lang="ts">
-  import '#lib/shared/theme/theme.css'
-
   import { useMatomo } from '#lib/shared/observability'
 
   import Footer from './Footer.svelte'
@@ -8,6 +6,8 @@
 
   import type { NavigationNode } from '#lib/shared/config'
   import type { Snippet } from 'svelte'
+
+  import '#lib/shared/theme/theme.css'
 
   interface Props {
     categoryMenu: NavigationNode[]

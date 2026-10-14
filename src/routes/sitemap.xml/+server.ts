@@ -1,5 +1,6 @@
-import { listCatalogPaths } from '#lib/modules/catalog/index.server'
 import { buildSitemapXml } from '#lib/shared/seo'
+
+import { listCatalogPaths } from '#lib/modules/catalog/index.server'
 
 import type { RequestHandler } from './$types'
 
