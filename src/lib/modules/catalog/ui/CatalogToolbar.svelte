@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Select } from '#lib/shared/ui/kit'
+  import { Button, Chip, Select } from '#lib/shared/ui/kit'
 
   import { SORTS } from '../domain/catalog'
   import { queryEntries } from '../domain/catalogQuery'
@@ -54,17 +54,15 @@
     <Button type="submit" variant="outline" class="js:hidden">Trier</Button>
   </form>
   <nav aria-label="Affichage" class="flex gap-1">
-    <a
+    <Chip
       href={catalogHref(path, { ...query, view: 'grille' })}
-      class="chip"
       aria-current={query.view === 'grille' ? 'page' : undefined}
-      data-testid="catalog-view-grid">Grille</a
+      data-testid="catalog-view-grid">Grille</Chip
     >
-    <a
+    <Chip
       href={catalogHref(path, { ...query, view: 'liste' })}
-      class="chip"
       aria-current={query.view === 'liste' ? 'page' : undefined}
-      data-testid="catalog-view-list">Liste</a
+      data-testid="catalog-view-list">Liste</Chip
     >
   </nav>
 </div>

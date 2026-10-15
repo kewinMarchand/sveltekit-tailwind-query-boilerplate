@@ -211,10 +211,6 @@
 }
 
 @layer components {
-  .chip {
-    @apply inline-flex min-h-touch items-center gap-2 rounded-full border border-border px-4 text-body-sm hover:bg-info-surface aria-[current=page]:border-primary aria-[current=page]:bg-primary aria-[current=page]:text-on-primary;
-  }
-
   .catalog-layout {
     @apply grid gap-12 lg:grid-cols-[280px_minmax(0,1fr)];
   }

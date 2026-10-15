@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Chip } from '#lib/shared/ui/kit'
+
   import { listActiveFilters } from './activeFilters'
   import { catalogHref } from './hooks/useCatalogNavigation.svelte'
 
@@ -23,18 +25,16 @@
     data-ui-chrome
     data-testid="catalog-active-filters"
   >
-    <ul class="flex flex-wrap gap-2">
+    <ul class="bui-chip-list">
       {#each filters as filter (filter.label)}
         <li>
-          <a
+          <Chip
             href={catalogHref(path, filter.query)}
-            class="chip"
+            removable
             data-testid="catalog-active-filter"
           >
-            <span class="sr-only">Retirer le filtre :</span>
             {filter.label}
-            <span aria-hidden="true">×</span>
-          </a>
+          </Chip>
         </li>
       {/each}
     </ul>

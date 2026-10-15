@@ -3,7 +3,7 @@
   import { resolveHref } from '#lib/shared/routing'
   import { absoluteUrl } from '#lib/shared/seo'
   import { useIsDesktop } from '#lib/shared/ui/hooks'
-  import { Button, Drawer, Icon } from '#lib/shared/ui/kit'
+  import { Button, Chip, Drawer, Icon } from '#lib/shared/ui/kit'
   import { PageHeader } from '#lib/shared/ui/layout'
 
   import { clearFilters, countActiveFilters, isFiltered } from '../domain/catalogQuery'
@@ -94,9 +94,9 @@
 
 {#if listing && listing.children.length > 0}
   <nav aria-label="Sous-catégories" class="mb-6">
-    <ul class="flex flex-wrap gap-2">
+    <ul class="bui-chip-list">
       {#each listing.children as child (child.slug)}
-        <li><a href={resolveHref(child.path)} class="chip">{child.name} ({child.count})</a></li>
+        <li><Chip href={resolveHref(child.path)}>{child.name} ({child.count})</Chip></li>
       {/each}
     </ul>
   </nav>

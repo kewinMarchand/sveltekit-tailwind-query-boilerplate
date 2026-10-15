@@ -1,7 +1,7 @@
 <script lang="ts">
   import { resolve } from '$app/paths'
 
-  import { Icon } from '#lib/shared/ui/kit'
+  import { Chip, Icon } from '#lib/shared/ui/kit'
 
   import Section from './Section.svelte'
 </script>
@@ -41,14 +41,9 @@
         </li>
       </ul>
     </nav>
-    <ul class="flex flex-wrap gap-2">
-      <li>
-        <a href={resolve('/plan-du-site')} class="chip"
-          ><span class="sr-only">Retirer le filtre :</span> Mi-ombre
-          <span aria-hidden="true">×</span></a
-        >
-      </li>
-      <li><a href={resolve('/plan-du-site')} class="chip" aria-current="page">Puce active</a></li>
+    <ul class="bui-chip-list">
+      <li><Chip href={resolve('/plan-du-site')} removable>Mi-ombre</Chip></li>
+      <li><Chip href={resolve('/plan-du-site')} aria-current="page">Puce active</Chip></li>
     </ul>
     <p class="flex flex-wrap gap-6">
       <a href={resolve('/plan-du-site')} class="bui-link">Lien interne</a>
