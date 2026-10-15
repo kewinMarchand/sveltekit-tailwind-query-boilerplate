@@ -80,7 +80,7 @@
 <div class="relative" bind:this={root}>
   <button
     type="button"
-    class="btn btn-nav"
+    class="bui-button bui-button--nav"
     aria-expanded={menu.open}
     aria-controls={menu.open ? panelId : undefined}
     data-testid="layout-category-menu-toggle"
@@ -88,7 +88,7 @@
     onclick={menu.toggle}
   >
     {CATALOG_NAVIGATION.label}
-    <Icon name="chevron-down" />
+    <Icon name="chevron-down" class="bui-icon--md" />
   </button>
   {#if menu.open}
     <!-- svelte-ignore a11y_no_static_element_interactions -->

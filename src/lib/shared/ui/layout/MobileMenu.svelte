@@ -38,7 +38,7 @@
 <Drawer
   bind:open
   title="Menu"
-  triggerClass="btn btn-nav btn-icon"
+  triggerClass="bui-button bui-button--nav bui-button--icon"
   triggerLabel="Menu"
   triggerTestId="layout-mobile-menu-toggle"
   panelTestId="layout-mobile-menu"

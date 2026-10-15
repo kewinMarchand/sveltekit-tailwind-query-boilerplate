@@ -47,6 +47,6 @@
   <p class="mt-6 mb-2">Sur la couleur primaire (en-tête, héros) :</p>
   <div class="flex flex-wrap gap-2 rounded-md bg-primary p-4">
     <Button variant="inverse">Inverse</Button>
-    <button type="button" class="btn btn-nav">Navigation (propre au site)</button>
+    <Button variant="nav">Navigation</Button>
   </div>
 </Section>
