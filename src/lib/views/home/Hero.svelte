@@ -23,10 +23,10 @@
       <h1 class="heading-1">{SITE.name}</h1>
       <p class="mb-8 text-title">{SITE.description}</p>
       <div class="flex flex-col gap-4 sm:flex-row">
-        <Button href={resolve('/taches')} data-testid="home-tasks-link">
+        <Button href={resolve('/taches')} variant="light" data-testid="home-tasks-link">
           Voir la démo TanStack Query
         </Button>
-        <Button href={resolve('/contact')} variant="inverse" data-testid="home-contact-link">
+        <Button href={resolve('/contact')} variant="outline-light" data-testid="home-contact-link">
           Voir le formulaire
         </Button>
       </div>
