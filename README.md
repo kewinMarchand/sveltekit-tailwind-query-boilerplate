@@ -124,7 +124,7 @@ Les tests e2e attendent les ports 3120 et 5173 en dur (`tests/e2e/seo.e2e.ts`, `
 
 ### Retirer les modules d'exemple
 
-Le catalogue, le blog et les tâches sont des exemples. Le contact reste, c'est le seul module que la procédure garde. Elle a été déroulée sur une copie jusqu'à un `make qa` vert.
+Le catalogue, le blog et les tâches sont des exemples. Le contact reste, c'est le seul module que la procédure garde. Déroulée sur une copie, elle mène à un `make qa` vert.
 
 1. Supprimer les modules et leurs routes : `src/lib/modules/catalog/`, `src/lib/modules/blog/`, `src/lib/modules/task/`, `src/routes/catalogue/`, `src/routes/taches/`, `src/routes/+page.server.ts` (articles de l'accueil) et `src/routes/+layout.server.ts` (menu des catégories).
 2. Retirer le catalogue du socle. Dans `src/lib/shared/config/navigation.ts` et son `index.ts`, supprimer `CATALOG_NAVIGATION`, le type `NavigationNode` et l'entrée `/taches`. Dans `src/lib/shared/ui/layout/`, retirer la propriété `categoryMenu` d'`AppShell.svelte` et de `Header.svelte`, retirer le menu de catégories du header, ramener `MobileMenu.svelte` à la liste de `MAIN_NAVIGATION`, puis supprimer `CategoryMenu.svelte` et les hooks `useCascadeMenu`, `useAnchoredPanel` et `useDrillDown`, devenus inutiles. Les classes `category-menu*` de `theme.css` peuvent partir aussi.
