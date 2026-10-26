@@ -5,7 +5,9 @@ export
 UID := $(shell id -u)
 GID := $(shell id -g)
 PLAYWRIGHT_VERSION := $(shell sed -n 's/.*"@playwright\/test": "\([0-9.]*\)".*/\1/p' package.json)
-export UID GID PLAYWRIGHT_VERSION
+# Dossier git commun, monté au même chemin dans le conteneur : dans un worktree, `.git` n'est qu'un renvoi vers lui
+GIT_COMMUN := $(shell git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+export UID GID PLAYWRIGHT_VERSION GIT_COMMUN
 RUN := docker compose run --rm node
 
 include Makefile.qa.mk
