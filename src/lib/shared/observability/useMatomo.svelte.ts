@@ -3,6 +3,7 @@ import { PUBLIC_MATOMO_SITE_ID, PUBLIC_MATOMO_URL } from '$app/env/public'
 import { afterNavigate } from '$app/navigation'
 
 import { matomoConfig, pageViewCommands, setupCommands } from './matomo'
+import { mesureRefusee } from './oppositionMesure'
 
 import type { MatomoCommand } from './matomo'
 
@@ -29,7 +30,8 @@ export const useMatomo = () => {
   let previousUrl: string | undefined
 
   afterNavigate(async ({ to }) => {
-    if (!to) return
+    // Refus lu avant la première commande (section 16 de la spec) : ni file, ni script, ni requête.
+    if (!to || mesureRefusee()) return
     const pending: MatomoCommand[] = []
     const queue = (window._paq ??= pending)
     if (previousUrl === undefined) {

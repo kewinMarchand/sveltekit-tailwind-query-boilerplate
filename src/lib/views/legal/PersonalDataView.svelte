@@ -3,6 +3,8 @@
   import { isAudienceMeasurementEnabled } from '#lib/shared/observability'
   import { PageHeader } from '#lib/shared/ui/layout'
 
+  import OppositionMesure from './OppositionMesure.svelte'
+
   const { publisher } = SITE
 </script>
 
@@ -53,6 +55,11 @@
         tiers. Les statistiques produites sont anonymes et servent uniquement à améliorer le site.
         Les données brutes sont conservées 25 mois au plus.
       </p>
+      <p>
+        Vous pouvez vous opposer à cette mesure : votre choix est gardé dans ce navigateur, sans
+        cookie.
+      </p>
+      <OppositionMesure />
     </section>
   {/if}
 </div>
