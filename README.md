@@ -51,7 +51,7 @@ make install   # image de dev (Node, Chromium) et dépendances
 make up        # http://localhost:5173, rechargement à chaud
 ```
 
-Le site lit ses données dans une API de test lancée à côté : [api-platform-test-api](https://github.com/kewinMarchand/api-platform-test-api) sur le port 8090 (défaut) ou [hono-mongo-test-api](https://github.com/kewinMarchand/hono-mongo-test-api) sur le port 8091, au même contrat. `API_URL` choisit l'une ou l'autre. Les tests e2e ont besoin de l'API lancée.
+Le site lit ses données dans une API de test lancée à côté : [boilerplate-api-platform](https://github.com/kewinMarchand/boilerplate-api-platform) sur le port 8090 (défaut) ou [boilerplate-hono](https://github.com/kewinMarchand/boilerplate-hono) sur le port 8091, au même contrat. `API_URL` choisit l'une ou l'autre. Les tests e2e ont besoin de l'API lancée.
 
 Variables d'environnement (`.env`, déclarées et validées dans `src/env.ts`). Le `Makefile` charge `.env` et l'exporte vers chaque commande, `make start` le relit aussi :
 
