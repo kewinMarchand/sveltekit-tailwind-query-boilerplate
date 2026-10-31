@@ -22,7 +22,7 @@ export interface SiteConfig {
 }
 
 export const SITE: SiteConfig = {
-  name: 'SvelteKit Tailwind Query Boilerplate',
+  name: 'Boilerplate Svelte',
   description:
     'Boilerplate SvelteKit avec Tailwind CSS, TanStack Query, superforms et zod, outillé pour la QA et les tests end-to-end.',
   url: PUBLIC_SITE_URL,
