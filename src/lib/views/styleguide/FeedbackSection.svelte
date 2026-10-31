@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Alert, Badge, Button, Skeleton } from '#lib/shared/ui/kit'
+  import { Alert, Badge, Button, Icon, Skeleton } from '#lib/shared/ui/kit'
 
   import Section from './Section.svelte'
 </script>
@@ -15,15 +15,15 @@
       <Skeleton variant="text" width="60%" />
     </div>
     <p class="flex flex-wrap gap-2">
-      <Badge label="Neutre" />
-      <Badge label="Info" variant="info" />
-      <Badge label="Succès" variant="success" />
-      <Badge label="Attention" variant="warning" />
-      <Badge label="Rupture de stock" variant="error" />
+      <Badge>Neutre</Badge>
+      <Badge variant="info">Info</Badge>
+      <Badge variant="success">Succès</Badge>
+      <Badge variant="warning">Attention</Badge>
+      <Badge variant="error">Rupture de stock</Badge>
     </p>
     <div class="flex flex-col items-start gap-3">
       <Alert variant="error">Le chargement a échoué.</Alert>
-      <Button variant="outline" icon="rotate-cw">Réessayer</Button>
+      <Button variant="outline"><Icon name="rotate-cw" />Réessayer</Button>
     </div>
   </div>
 </Section>

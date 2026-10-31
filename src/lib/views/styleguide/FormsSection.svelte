@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Checkbox, Select, TextField } from '#lib/shared/ui/kit'
+  import { Checkbox, Select, Switch, TextField } from '#lib/shared/ui/kit'
 
   import Section from './Section.svelte'
 
@@ -48,7 +48,7 @@
       ]}
     />
     <Checkbox id="{uid}-checkbox" label="Case à cocher" checked />
-    <Checkbox id="{uid}-switch" label="Interrupteur" switch />
+    <Switch id="{uid}-switch" label="Interrupteur" />
     <fieldset class="bui-fieldset">
       <legend class="bui-fieldset__legend">Boutons radio</legend>
       <div class="bui-fieldset__content">

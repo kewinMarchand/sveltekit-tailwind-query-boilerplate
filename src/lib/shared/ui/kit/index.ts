@@ -1,14 +1,17 @@
-export { default as Alert } from './Alert.svelte'
-export { default as Badge } from './Badge.svelte'
-export { default as Button } from './Button.svelte'
-export { default as Checkbox } from './Checkbox.svelte'
-export { default as Chip } from './Chip.svelte'
 export { default as Drawer } from './Drawer.svelte'
 export { default as Icon } from './Icon.svelte'
-export { default as IconButton } from './IconButton.svelte'
 export type { IconName } from './iconNames'
 export { ICON_NAMES } from './iconNames'
 export { default as ResponsiveImage } from './ResponsiveImage.svelte'
-export { default as Select } from './Select.svelte'
 export { default as TextField } from './TextField.svelte'
-export { Skeleton } from '@kewinmarchand/boilerplates-ui/svelte'
+export {
+  Alert,
+  Badge,
+  Button,
+  Checkbox,
+  Chip,
+  IconButton,
+  Select,
+  Skeleton,
+  Switch,
+} from '@kewinmarchand/boilerplates-ui/svelte'

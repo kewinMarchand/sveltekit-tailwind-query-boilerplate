@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Alert, Button, Skeleton } from '#lib/shared/ui/kit'
+  import { Alert, Button, Icon, Skeleton } from '#lib/shared/ui/kit'
 
   import BlogCard from './BlogCard.svelte'
 
@@ -30,8 +30,8 @@
 {:else if status === 'error'}
   <div class="flex flex-col items-start gap-3">
     <Alert variant="error" data-testid="home-blog-error">{errorMessage}</Alert>
-    <Button variant="outline" icon="rotate-cw" onclick={onRetry} data-testid="home-blog-retry">
-      Réessayer
+    <Button variant="outline" onclick={onRetry} data-testid="home-blog-retry"
+      ><Icon name="rotate-cw" />Réessayer
     </Button>
   </div>
 {:else if !articles?.length}

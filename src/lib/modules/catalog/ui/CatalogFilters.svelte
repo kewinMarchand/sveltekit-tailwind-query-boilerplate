@@ -1,6 +1,6 @@
 <script lang="ts">
   import { resolveHref } from '#lib/shared/routing'
-  import { Button, Checkbox, Icon } from '#lib/shared/ui/kit'
+  import { Button, Checkbox, Icon, Switch } from '#lib/shared/ui/kit'
 
   import { queryEntries } from '../domain/catalogQuery'
   import { EXPOSURE_LABELS, SIZE_LABELS } from './labels'
@@ -123,8 +123,7 @@
       </summary>
       <fieldset class="bui-accordion__content">
         <legend class="sr-only">Disponibilité</legend>
-        <Checkbox
-          switch
+        <Switch
           id="{uid}-en-stock"
           label="En stock uniquement"
           name="en_stock"

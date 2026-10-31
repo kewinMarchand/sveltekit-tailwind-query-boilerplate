@@ -42,7 +42,7 @@
         {EXPOSURE_LABELS[product.exposure]} · Taille {SIZE_LABELS[product.size].toLowerCase()}
       </p>
       {#if !product.inStock}
-        <p class="mt-1"><Badge label="Rupture de stock" variant="error" /></p>
+        <p class="mt-1"><Badge variant="error">Rupture de stock</Badge></p>
       {/if}
     </div>
   </div>

@@ -28,8 +28,8 @@
 {:else if status === 'error'}
   <div class="flex flex-col items-start gap-3">
     <Alert variant="error" data-testid="tasks-error">{errorMessage}</Alert>
-    <Button variant="outline" icon="rotate-cw" onclick={onRetry} data-testid="tasks-retry">
-      Réessayer
+    <Button variant="outline" onclick={onRetry} data-testid="tasks-retry"
+      ><Icon name="rotate-cw" />Réessayer
     </Button>
   </div>
 {:else if !tasks?.length}

@@ -37,7 +37,7 @@
               </td>
             {/each}
             <td>
-              <IconButton {variant} icon="rotate-cw" label="Réessayer" />
+              <IconButton {variant} icon="x" label="Fermer" />
             </td>
           </tr>
         {/each}
