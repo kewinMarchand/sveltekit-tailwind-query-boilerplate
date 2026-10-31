@@ -11,6 +11,7 @@ export {
   Checkbox,
   Chip,
   IconButton,
+  Menu,
   Select,
   Skeleton,
   Switch,

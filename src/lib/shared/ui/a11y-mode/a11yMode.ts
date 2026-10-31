@@ -1,7 +1,8 @@
 export const A11Y_MODE_STORAGE_KEY = 'a11y-mode'
 export const A11Y_MODE_ENHANCED = 'enhanced'
 
-export const A11Y_MODE_INLINE_SCRIPT = `<script>try{if(localStorage.getItem('${A11Y_MODE_STORAGE_KEY}')==='${A11Y_MODE_ENHANCED}')document.documentElement.dataset.a11yMode='${A11Y_MODE_ENHANCED}'}catch(e){}</script>`
+/** Script d'amorçage, servi dans la même balise que celui du thème (hooks.server.ts). */
+export const A11Y_MODE_SCRIPT = `try{if(localStorage.getItem('${A11Y_MODE_STORAGE_KEY}')==='${A11Y_MODE_ENHANCED}')document.documentElement.dataset.a11yMode='${A11Y_MODE_ENHANCED}'}catch(e){}`
 
 export const isEnhancedModeActive = () =>
   document.documentElement.dataset.a11yMode === A11Y_MODE_ENHANCED

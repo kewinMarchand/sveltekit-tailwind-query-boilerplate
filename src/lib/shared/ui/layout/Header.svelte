@@ -4,6 +4,7 @@
 
   import { CATALOG_NAVIGATION, MAIN_NAVIGATION, SITE } from '#lib/shared/config'
   import { A11yModeToggle } from '#lib/shared/ui/a11y-mode'
+  import { ColorSchemeToggle } from '#lib/shared/ui/color-scheme'
 
   import CategoryMenu from './CategoryMenu.svelte'
   import MobileMenu from './MobileMenu.svelte'
@@ -46,6 +47,7 @@
     <div class="hidden js:max-lg:block">
       <MobileMenu nodes={categoryMenu} />
     </div>
+    <ColorSchemeToggle />
     <A11yModeToggle />
   </div>
 </header>

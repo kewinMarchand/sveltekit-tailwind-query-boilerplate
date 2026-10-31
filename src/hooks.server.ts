@@ -7,7 +7,8 @@ import {
   shouldReportError,
 } from '#lib/shared/observability/index.server'
 import { announceStartup, CSP, CSP_HEADER } from '#lib/shared/security/index.server'
-import { A11Y_MODE_INLINE_SCRIPT } from '#lib/shared/ui/a11y-mode'
+import { A11Y_MODE_SCRIPT } from '#lib/shared/ui/a11y-mode'
+import { COLOR_SCHEME_SCRIPT } from '#lib/shared/ui/color-scheme'
 
 import { MAINTENANCE_HTML, MAINTENANCE_RETRY_AFTER_SECONDS } from '#lib/views/errors'
 
@@ -17,6 +18,9 @@ export const init: ServerInit = () => {
   announceStartup()
   return initServerErrorReporting()
 }
+
+// Mode renforcé et thème posés avant le premier rendu, dans une seule balise (sections 4 et 20 de la spec commune).
+const BOOT_SCRIPT = `<script>${A11Y_MODE_SCRIPT}${COLOR_SCHEME_SCRIPT}</script>`
 
 export const handle: Handle = async ({ event, resolve }) => {
   if (MAINTENANCE === '1') {
@@ -31,7 +35,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   const response = await resolve(event, {
     preload: ({ type }) => type === 'css',
-    transformPageChunk: ({ html }) => html.replace('%a11y-mode.script%', A11Y_MODE_INLINE_SCRIPT),
+    transformPageChunk: ({ html }) => html.replace('%boot.script%', BOOT_SCRIPT),
   })
   // CSP en mode Report-Only : rien n'est bloqué, chaque écart est signalé à /api/csp-report
   response.headers.set(CSP_HEADER, CSP)

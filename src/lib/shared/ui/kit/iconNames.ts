@@ -1,5 +1,6 @@
 // Généré par `make icons` depuis icons.json, ne pas modifier à la main.
 export const ICON_NAMES = [
+  'check',
   'chevron-down',
   'chevron-left',
   'chevron-right',
@@ -10,9 +11,12 @@ export const ICON_NAMES = [
   'loader-circle',
   'mail',
   'menu',
+  'monitor',
+  'moon',
   'person-standing',
   'rotate-cw',
   'sliders-horizontal',
+  'sun',
   'triangle-alert',
   'x',
 ] as const

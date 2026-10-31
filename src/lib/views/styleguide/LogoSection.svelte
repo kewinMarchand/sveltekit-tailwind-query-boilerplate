@@ -10,7 +10,7 @@
       <img src="/logo-mark.svg" alt="" width="64" height="64" />
       <span class="logo-link text-text">{SITE.name}</span>
     </div>
-    <div class="flex items-center gap-4 rounded-md bg-primary-dark p-6 text-white">
+    <div class="flex items-center gap-4 rounded-md bg-primary p-6 text-on-primary">
       <img src="/logo-mark.svg" alt="" width="64" height="64" />
       <span class="logo-link">{SITE.name}</span>
     </div>

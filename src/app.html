@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-color-scheme="auto">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#1d4ed8" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="format-detection" content="telephone=no, email=no, address=no" />
     <link rel="icon" href="%sveltekit.assets%/favicon.ico" sizes="48x48" />
     <link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
@@ -12,7 +13,7 @@
     <script>
       document.documentElement.classList.add('js')
     </script>
-    %a11y-mode.script% %sveltekit.head%
+    %boot.script% %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover">
     %sveltekit.body%
