@@ -228,9 +228,9 @@ Le pattern est dans `src/lib/modules/task/` :
 
 ### Composants de boilerplates-ui
 
-Tokens, CSS et comportement des composants génériques viennent de [boilerplates-ui](https://github.com/kewinMarchand/boilerplates-ui), documentés dans son [Storybook](https://kewinmarchand.github.io/boilerplates-ui/). `src/lib/shared/ui/kit/` en contient les versions Svelte : bouton, bouton icône, champ, liste déroulante, case et interrupteur, alerte, badge, squelette, tiroir, icône. Ils recopient le balisage de référence de la bibliothèque. La charte graphique (`/charte-graphique`) montre leur rendu dans le site.
+Tokens, CSS et comportement des composants génériques viennent de [boilerplates-ui](https://github.com/kewinMarchand/boilerplates-ui), documentés dans son [Storybook](https://kewinmarchand.github.io/boilerplates-ui/). Les composants Svelte viennent de la couche `svelte` de la bibliothèque, par la façade `src/lib/shared/ui/kit/` : alerte, badge, boutons, case, interrupteur, puce, liste déroulante, squelette, et deux adaptateurs du site (champ superforms, tiroir avec son déclencheur). L'icône reste celle du site (son sprite). La charte graphique (`/charte-graphique`) montre leur rendu dans le site.
 
-Monter de version : changer l'étiquette dans `package.json` (`github:kewinMarchand/boilerplates-ui#vX.Y.Z`), lancer `make install`, puis reporter dans le kit les changements de balisage de la nouvelle version.
+Monter de version : changer l'étiquette dans `package.json` (`github:kewinMarchand/boilerplates-ui#vX.Y.Z`), lancer `make install`, puis relire le journal des versions de la bibliothèque.
 
 ### CSP et rapports de violation
 
