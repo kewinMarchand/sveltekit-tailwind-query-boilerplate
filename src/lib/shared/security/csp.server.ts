@@ -18,6 +18,4 @@ export const cspReportHandler = cspReportRoute()
 
 /** Ligne de démarrage, pour retrouver le bon fichier de log chez l'hébergeur. */
 export const announceStartup = () =>
-  process.stdout.write(
-    `${startupLine('sveltekit-tailwind-query-boilerplate', dev ? 'development' : 'production')}\n`,
-  )
+  process.stdout.write(`${startupLine('boilerplate-svelte', dev ? 'development' : 'production')}\n`)

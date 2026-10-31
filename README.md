@@ -1,4 +1,4 @@
-# sveltekit-tailwind-query-boilerplate
+# boilerplate-svelte
 
 Point de départ pour une application **SvelteKit 3** (Svelte 5, runes) avec **Tailwind CSS 4**, **TanStack Query**, **superforms + zod**, et toute la chaîne qualité : lint, format, types, tests unitaires, end-to-end, accessibilité et Lighthouse.
 
@@ -44,8 +44,8 @@ Rien d'autre : ni Node, ni Yarn, ni navigateur sur la machine. Chaque commande `
 ## Démarrage
 
 ```sh
-git clone https://github.com/kewinMarchand/sveltekit-tailwind-query-boilerplate.git
-cd sveltekit-tailwind-query-boilerplate
+git clone https://github.com/kewinMarchand/boilerplate-svelte.git
+cd boilerplate-svelte
 cp .env.example .env
 make install   # image de dev (Node, Chromium) et dépendances
 make up        # http://localhost:5173, rechargement à chaud
@@ -74,7 +74,7 @@ Variables d'environnement (`.env`, déclarées et validées dans `src/env.ts`). 
 Voie recommandée : le dépôt est un modèle GitHub. Cliquer sur « Use this template », ou en ligne de commande :
 
 ```sh
-gh repo create mon-projet --template kewinMarchand/sveltekit-tailwind-query-boilerplate --private --clone
+gh repo create mon-projet --template kewinMarchand/boilerplate-svelte --private --clone
 ```
 
 Le nouveau dépôt part d'un historique neuf, sans lien avec celui-ci.
@@ -82,7 +82,7 @@ Le nouveau dépôt part d'un historique neuf, sans lien avec celui-ci.
 Voie du fork, pour suivre les évolutions du boilerplate ou y contribuer :
 
 ```sh
-gh repo fork kewinMarchand/sveltekit-tailwind-query-boilerplate --clone --fork-name mon-projet
+gh repo fork kewinMarchand/boilerplate-svelte --clone --fork-name mon-projet
 ```
 
 Le fork devient le dépôt `origin` et ce dépôt le dépôt `upstream`. GitHub refuse de forker un dépôt dans le compte qui le possède : dans ce cas, forker dans une organisation avec `--org`.
@@ -99,7 +99,7 @@ git merge upstream/main
 Avec un dépôt créé depuis le modèle, l'historique n'est pas commun : on reprend les commits utiles un par un.
 
 ```sh
-git remote add boilerplate https://github.com/kewinMarchand/sveltekit-tailwind-query-boilerplate.git
+git remote add boilerplate https://github.com/kewinMarchand/boilerplate-svelte.git
 git fetch boilerplate
 git log --oneline boilerplate/main
 git cherry-pick <sha>
@@ -240,7 +240,7 @@ Chaque réponse porte un en-tête `Content-Security-Policy-Report-Only` construi
 [csp-report] https://cdn.exemple.com a besoin d'une autorisation de type script (script-src) — bloqué sur /contact
 ```
 
-- **Lire les logs** : `docker compose logs -f web` pour l'image de production, la sortie de `make up` en développement, la console de l'hébergeur en production. Au démarrage, `[sveltekit-tailwind-query-boilerplate] serveur démarré (production)` permet de retrouver le bon fichier.
+- **Lire les logs** : `docker compose logs -f web` pour l'image de production, la sortie de `make up` en développement, la console de l'hébergeur en production. Au démarrage, `[boilerplate-svelte] serveur démarré (production)` permet de retrouver le bon fichier.
 - **Autoriser une origine** : l'ajouter à sa directive (le nom est entre parenthèses dans la ligne) dans `siteCsp()` de `src/lib/shared/security/csp.ts`. L'API (`API_URL`), Matomo et GlitchTip y sont déjà, quand leur variable est renseignée.
 - **Pourquoi Report-Only et `'unsafe-inline'`** : on collecte d'abord ce que le site charge vraiment avant de bloquer quoi que ce soit ; l'hydratation de SvelteKit écrit du script en ligne, et un nonce par réponse rendrait toutes les pages dynamiques.
 
