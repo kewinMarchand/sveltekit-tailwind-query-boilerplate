@@ -1,20 +1,19 @@
+<!-- Champ de formulaire superforms : identifiant dérivé du nom, premier message de `errors`, zone de texte si `multiline`. -->
 <script lang="ts">
-  import Icon from './Icon.svelte'
-
-  import type { HTMLInputAttributes } from 'svelte/elements'
+  import { TextArea, TextField } from '@kewinmarchand/boilerplates-ui/svelte'
 
   interface Props {
     name: string
     label: string
     value: string
     errors?: string[] | undefined
-    hint?: string
+    hint?: string | undefined
     disabled?: boolean
     multiline?: boolean
-    type?: HTMLInputAttributes['type']
-    autocomplete?: HTMLInputAttributes['autocomplete']
+    type?: 'text' | 'email' | 'tel' | 'url' | 'password' | 'search'
+    autocomplete?: HTMLInputElement['autocomplete'] | undefined
     required?: boolean
-    'data-testid'?: string
+    'data-testid'?: string | undefined
   }
 
   let {
@@ -33,47 +32,32 @@
 
   const uid = $props.id()
   const id = $derived(`${uid}-${name}`)
-  const error = $derived(errors?.[0])
-  const describedBy = $derived(
-    [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(' ') || undefined,
-  )
 </script>
 
-<div class="bui-field">
-  <label class="bui-field__label" for={id}
-    >{label}{#if required}<span class="bui-field__required">&nbsp;(obligatoire)</span>{/if}</label
-  >
-  {#if hint}
-    <p class="bui-field__hint" id="{id}-hint">{hint}</p>
-  {/if}
-  {#if multiline}
-    <textarea
-      class="bui-field__input bui-field__input--multiline"
-      rows="4"
-      {id}
-      {name}
-      {required}
-      {disabled}
-      aria-invalid={error ? 'true' : undefined}
-      aria-describedby={describedBy}
-      data-testid={testId}
-      bind:value></textarea>
-  {:else}
-    <input
-      class="bui-field__input"
-      {type}
-      {autocomplete}
-      {id}
-      {name}
-      {required}
-      {disabled}
-      aria-invalid={error ? 'true' : undefined}
-      aria-describedby={describedBy}
-      data-testid={testId}
-      bind:value
-    />
-  {/if}
-  {#if error}
-    <p class="bui-field__error" id="{id}-error"><Icon name="circle-alert" />{error}</p>
-  {/if}
-</div>
+{#if multiline}
+  <TextArea
+    {id}
+    {name}
+    {label}
+    {hint}
+    error={errors?.[0]}
+    {required}
+    {disabled}
+    data-testid={testId}
+    bind:value
+  />
+{:else}
+  <TextField
+    {id}
+    {name}
+    {label}
+    {hint}
+    error={errors?.[0]}
+    {required}
+    {disabled}
+    {type}
+    {autocomplete}
+    data-testid={testId}
+    bind:value
+  />
+{/if}
