@@ -147,21 +147,21 @@ Les règles de dépendance n'ont rien à changer : `eslint.config.js` lit la lis
 
 `make help` liste toutes les commandes. Les principales :
 
-| Commande                               | Effet                                                                                                       |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `make up`                              | Serveur de développement (port 5173)                                                                        |
-| `make build` / `make start`            | Build de production, puis le servir                                                                         |
-| `make qa`                              | QA rapide : lint (dont architecture), auto-test des règles, sprite d'icônes, format, types, tests unitaires |
-| `make icons`                           | Génère `static/icons.svg` et le type des noms depuis `icons.json`                                           |
-| `make arch-selftest`                   | Écrit une violation de chaque règle d'architecture, exige l'échec d'ESLint, puis la retire                  |
-| `make qa-full`                         | QA complète : QA rapide, e2e, accessibilité, Lighthouse                                                     |
-| `make test-unit`                       | Vitest                                                                                                      |
-| `make test-e2e`                        | Playwright, desktop et mobile (port 3120)                                                                   |
-| `make test-a11y`                       | axe-core, WCAG 2.1 AA, sur chaque page, mode standard et mode renforcé                                      |
-| `make metrics`                         | Lighthouse CI (port 3220) : échoue sous 90 en performance ou sous 100 en accessibilité et SEO               |
-| `make api-types`                       | Génère `src/lib/shared/api/schema.d.ts` depuis `API_SCHEMA_URL`                                             |
-| `make docker-down`                     | Arrête les conteneurs, dont ceux de dev                                                                     |
-| `make docker-build` / `make docker-up` | Image de production, sur le port `PORT` (3000 par défaut)                                                   |
+| Commande                               | Effet                                                                                                                 |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `make up`                              | Serveur de développement (port 5173)                                                                                  |
+| `make build` / `make start`            | Build de production, puis le servir                                                                                   |
+| `make qa`                              | QA rapide : lint (dont architecture), auto-test des règles, sprite d'icônes, format, types, tests unitaires           |
+| `make icons`                           | Génère `static/icons.svg` et le type des noms depuis `icons.json`                                                     |
+| `make arch-selftest`                   | Écrit une violation de chaque règle d'architecture, exige l'échec d'ESLint, puis la retire                            |
+| `make qa-full`                         | QA complète : QA rapide, e2e, accessibilité, Lighthouse                                                               |
+| `make test-unit`                       | Vitest                                                                                                                |
+| `make test-e2e`                        | Playwright, desktop et mobile (port 3120)                                                                             |
+| `make test-a11y`                       | axe-core, WCAG 2.1 AA, sur chaque page, mode standard et mode renforcé                                                |
+| `make metrics`                         | Lighthouse CI (port 3220) en clair puis en sombre : échoue sous 90 en performance ou sous 100 en accessibilité et SEO |
+| `make api-types`                       | Génère `src/lib/shared/api/schema.d.ts` depuis `API_SCHEMA_URL`                                                       |
+| `make docker-down`                     | Arrête les conteneurs, dont ceux de dev                                                                               |
+| `make docker-build` / `make docker-up` | Image de production, sur le port `PORT` (3000 par défaut)                                                             |
 
 ## Architecture
 
